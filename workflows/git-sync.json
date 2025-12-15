@@ -1,0 +1,360 @@
+{
+  "updatedAt": "2025-12-14T09:33:06.926Z",
+  "createdAt": "2025-12-14T01:18:09.858Z",
+  "id": "thtJFXTHUPeRPf5O",
+  "name": "Git sync",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "7b404131-ef56-4f4c-b79e-e39bb1c8b509",
+      "name": "On clicking 'execute'",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        352,
+        144
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "filters": {},
+        "requestOptions": {}
+      },
+      "id": "b5057d53-90fe-4356-a9a4-a35b3dde0593",
+      "name": "n8n",
+      "type": "n8n-nodes-base.n8n",
+      "position": [
+        752,
+        256
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "n8nApi": {
+          "id": "PfJPRjIXNtVRsvsK",
+          "name": "n8n account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "bbfe9798-fcb9-4039-982d-576a9cccd99e",
+      "name": "Loop Over Items",
+      "type": "n8n-nodes-base.splitInBatches",
+      "position": [
+        960,
+        256
+      ],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 1,
+              "triggerAtMinute": 33
+            }
+          ]
+        }
+      },
+      "id": "f4b7ef6c-8d56-41a1-8a79-6b7be9b22e14",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [
+        352,
+        352
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "content": "## Backup to GitHub \nThis workflow will backup all instance workflows to GitHub every 24 hours.\n\nThe files are saved into folders using `YYYY/MM/` for the directory path and `ID.json` for the filename.\n\nThe Repo Owner, Repo Name and Main folder are set using the **Variables** feature but can be replaced with the `Config` node in the subworkflow. \n\nThe workflow runs calls itself to help reduce memory usage, Once the workflow has completed it will send an optional notification to Slack.\n\n### Time to Run\nTested with 1423 workflows on `1.44.1` it took under 30 minutes for the first run and under 12 minutes once the initial run is complete.",
+        "height": 417,
+        "width": 385,
+        "color": 4
+      },
+      "id": "c0379464-e48d-4f37-81ca-bb9c315dc474",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -128,
+        64
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Main workflow loop",
+        "height": 416.1856906618075,
+        "width": 1272.6408145680155,
+        "color": 7
+      },
+      "id": "3f43cb2f-d96b-4459-9d17-156d0fb6956f",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        320,
+        64
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "guildId": {
+          "__rl": true,
+          "value": "1448492576758956196",
+          "mode": "list",
+          "cachedResultName": "n8n8n8n",
+          "cachedResultUrl": "https://discord.com/channels/1448492576758956196"
+        },
+        "channelId": {
+          "__rl": true,
+          "value": "1449574270350131211",
+          "mode": "list",
+          "cachedResultName": "n8n-updates⏩",
+          "cachedResultUrl": "https://discord.com/channels/1448492576758956196/1449574270350131211"
+        },
+        "content": "=Starting Workflow Backup [{{ $execution.id }}]",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        576,
+        256
+      ],
+      "id": "82592af9-98a5-4eb2-99bb-866dec422964",
+      "name": "Notify starting",
+      "webhookId": "b6ef3fcc-b5a1-4a6a-ba50-18dc8871e883",
+      "credentials": {
+        "discordBotApi": {
+          "id": "0q4bkczLogSD1luU",
+          "name": "Discord Bot account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "BGYf1j3RDKApsKWq",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/BGYf1j3RDKApsKWq",
+          "cachedResultName": "Git sync (sub)"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1184,
+        272
+      ],
+      "name": "Call Git sync (sub)",
+      "id": "79ec56b0-e929-4996-8775-cb5b27d282eb",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "guildId": {
+          "__rl": true,
+          "value": "1448492576758956196",
+          "mode": "list",
+          "cachedResultName": "n8n8n8n",
+          "cachedResultUrl": "https://discord.com/channels/1448492576758956196"
+        },
+        "channelId": {
+          "__rl": true,
+          "value": "1449574270350131211",
+          "mode": "list",
+          "cachedResultName": "n8n-updates⏩",
+          "cachedResultUrl": "https://discord.com/channels/1448492576758956196/1449574270350131211"
+        },
+        "content": "=✅ Backup has completed - {{ $('n8n').all().length }} workflows have been processed.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        1184,
+        112
+      ],
+      "id": "93f64355-2442-4b37-9ece-ad2aa63afc2d",
+      "name": "Notify completed",
+      "webhookId": "d94f3427-6fbf-4cb6-91ae-3f5248793791",
+      "executeOnce": true,
+      "credentials": {
+        "discordBotApi": {
+          "id": "0q4bkczLogSD1luU",
+          "name": "Discord Bot account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "guildId": {
+          "__rl": true,
+          "value": "1448492576758956196",
+          "mode": "list",
+          "cachedResultName": "n8n8n8n",
+          "cachedResultUrl": "https://discord.com/channels/1448492576758956196"
+        },
+        "channelId": {
+          "__rl": true,
+          "value": "1449574270350131211",
+          "mode": "list",
+          "cachedResultName": "n8n-updates⏩",
+          "cachedResultUrl": "https://discord.com/channels/1448492576758956196/1449574270350131211"
+        },
+        "content": "=Failed to backup {{ $('Loop Over Items').item.json.id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        1408,
+        288
+      ],
+      "id": "2608d9b1-acc5-4bb3-aa5d-9d275cad0bd3",
+      "name": "Notify failure",
+      "webhookId": "56fe0b2f-3085-45bf-93d9-f3fdab0f3da1",
+      "credentials": {
+        "discordBotApi": {
+          "id": "0q4bkczLogSD1luU",
+          "name": "Discord Bot account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "n8n": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Notify completed",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Call Git sync (sub)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Notify starting",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On clicking 'execute'": {
+      "main": [
+        [
+          {
+            "node": "Notify starting",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify starting": {
+      "main": [
+        [
+          {
+            "node": "n8n",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Git sync (sub)": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Notify failure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify failure": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "e23a31c1-5ba0-4cd7-b7b9-2a37b70582b4",
+  "activeVersionId": null,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-12-14T01:18:09.870Z",
+      "createdAt": "2025-12-14T01:18:09.870Z",
+      "role": "workflow:owner",
+      "workflowId": "thtJFXTHUPeRPf5O",
+      "projectId": "Zegp8TetQgawftof"
+    }
+  ],
+  "activeVersion": null,
+  "tags": []
+}

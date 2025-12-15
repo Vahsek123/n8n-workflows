@@ -1,5 +1,10 @@
 {
-  "name": "Hello World!",
+  "updatedAt": "2025-12-15T11:11:15.461Z",
+  "createdAt": "2025-12-15T09:17:35.734Z",
+  "id": "FmnH0NhOmDHVBsXK",
+  "name": "Hello World",
+  "active": false,
+  "isArchived": false,
   "nodes": [
     {
       "parameters": {},
@@ -26,7 +31,6 @@
       "name": "Execute Command"
     }
   ],
-  "pinData": {},
   "connections": {
     "When clicking ‘Execute workflow’": {
       "main": [
@@ -40,14 +44,24 @@
       ]
     }
   },
-  "active": false,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "65be9d65-2958-4f84-810c-f330dd209da0",
-  "meta": {
-    "instanceId": "78ecd316a6a467e3f5339b98a2f795229d03fc313941b0c751267c68e4cbedcf"
-  },
-  "id": "FmnH0NhOmDHVBsXK",
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "fa01e16f-2411-4488-bb9a-8b6803379027",
+  "activeVersionId": null,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-12-15T09:17:35.743Z",
+      "createdAt": "2025-12-15T09:17:35.743Z",
+      "role": "workflow:owner",
+      "workflowId": "FmnH0NhOmDHVBsXK",
+      "projectId": "Zegp8TetQgawftof"
+    }
+  ],
+  "activeVersion": null,
   "tags": []
 }

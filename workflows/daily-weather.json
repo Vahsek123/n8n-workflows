@@ -1,0 +1,556 @@
+{
+  "updatedAt": "2025-12-14T01:12:48.631Z",
+  "createdAt": "2025-12-13T04:57:38.978Z",
+  "id": "vZCByZUyKXAkIuG8",
+  "name": "Daily weather",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        192
+      ],
+      "id": "1c1673d7-df3a-4af8-a006-172c8833defe",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "url": "https://maps.googleapis.com/maps/api/geocode/json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "address",
+              "value": "Auckland, New Zealand"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        224,
+        96
+      ],
+      "id": "04d3971e-4b3e-4e64-b633-65a752a66c0e",
+      "name": "Get Longitude/Latitude",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "gkNOjQWO8lCCJVkx",
+          "name": "Google API (n8n-dev)"
+        },
+        "httpQueryAuth": {
+          "id": "bEyikR60OnVCyaMN",
+          "name": "Google API (n8n-dev)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://weather.googleapis.com/v1/forecast/hours:lookup",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "location.latitude",
+              "value": "={{ $json.results[0].geometry.location.lat }}"
+            },
+            {
+              "name": "location.longitude",
+              "value": "={{ $json.results[0].geometry.location.lng }}"
+            },
+            {
+              "name": "hours",
+              "value": "24"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        448,
+        96
+      ],
+      "id": "404ce7d6-03ba-44c3-af08-de31e9da1d7e",
+      "name": "Get Hourly Forecast",
+      "credentials": {
+        "httpQueryAuth": {
+          "id": "bEyikR60OnVCyaMN",
+          "name": "Google API (n8n-dev)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "={{ $json.promptText }}"
+            }
+          ]
+        },
+        "options": {
+          "systemMessage": "You are a cheerful and enthusiastic weather assistant who transforms raw weather data into engaging, personalized daily forecasts. Your goal is to help people start their day informed and prepared.  ## Your Role - Analyze weather data (temperature, conditions, humidity, wind, etc.) and create a friendly, conversational summary - Provide practical advice on what to wear and what to bring (umbrella, sunscreen, jacket, etc.) - Highlight any notable weather conditions or changes throughout the day - Use a warm, upbeat tone that makes checking the weather feel like chatting with a helpful friend - Be concise but informative - aim for 5 short sentences maximum  ## Style Guidelines - Start with a friendly greeting appropriate to the weather (e.g., \"Good morning! ☀️\" or \"Rise and shine! 🌧️\") - Use emojis sparingly but effectively to add personality - Avoid robotic or overly formal language - Include one light joke or playful comment when appropriate (but don't force it) - End with an encouraging sign-off  ## What to Include 1. **Current conditions**: Temperature, \"feels like\" temp, and overall weather description 2. **Comfort factors**: Humidity levels if notable, wind conditions if significant 3. **Practical advice**: Clothing suggestions, whether to bring an umbrella/sunglasses/layers 4. **Day outlook**: If data includes hourly forecasts, mention any changes expected (morning vs afternoon) 5. **Activity suggestions**: Brief mention if it's a great day for outdoor activities or better to stay cozy inside  ## What to Avoid - Don't just repeat the raw numbers - interpret them - Don't be overly dramatic about normal weather - Don't provide safety warnings for extreme weather you're not qualified to assess - Don't make the message too long - keep it scannable  ## Example Tone Instead of: \"Temperature: 18°C, Partly cloudy, Humidity: 65%\" Say: \"Good morning! It's a pleasant 18°C out there with some clouds playing peek-a-boo with the sun. You'll want a light jacket for the morning, but you might shed it by afternoon!\"  Transform the weather data into a message that makes people smile while helping them plan their day confidently."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        896,
+        96
+      ],
+      "id": "dcf4dc04-4aa9-47b5-bf8d-7cc64b93df9e",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "tOoDRZ6WLhIjmMdq",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract the weather data from the API response\nconst weatherData = $input.first().json;\nconst forecastHours = weatherData.forecastHours;\n\n// Get current hour (first item in the array)\nconst current = forecastHours[0];\n\n// Get the next few hours for trends\nconst next12Hours = forecastHours.slice(0, 13);\n\n// Find day and evening forecasts\nconst dayForecasts = forecastHours.filter(h => h.isDaytime);\nconst eveningForecasts = forecastHours.filter(h => !h.isDaytime);\n\n// Calculate high/low for the day\nconst dayTemps = dayForecasts.map(h => h.temperature.degrees);\nconst highTemp = Math.max(...dayTemps);\nconst lowTemp = Math.min(...dayTemps);\n\n// Check for rain chances\nconst rainChances = forecastHours.map(h => h.precipitation.probability.percent);\nconst maxRainChance = Math.max(...rainChances);\n\n// Format a readable summary\nconst formattedData = {\n  currentConditions: {\n    time: `${current.displayDateTime.hours}:00`,\n    temperature: current.temperature.degrees,\n    feelsLike: current.feelsLikeTemperature.degrees,\n    condition: current.weatherCondition.description.text,\n    humidity: current.relativeHumidity,\n    windSpeed: current.wind.speed.value,\n    windDirection: current.wind.direction.cardinal,\n    uvIndex: current.uvIndex,\n    rainChance: current.precipitation.probability.percent\n  },\n  \n  dayOverview: {\n    highTemp: highTemp,\n    lowTemp: lowTemp,\n    maxRainChance: maxRainChance,\n    summaryConditions: [...new Set(dayForecasts.map(h => h.weatherCondition.description.text))].join(', ')\n  },\n  \n  next12Hours: next12Hours.map(h => ({\n    time: `${h.displayDateTime.hours}:00`,\n    temp: h.temperature.degrees,\n    condition: h.weatherCondition.description.text,\n    rainChance: h.precipitation.probability.percent\n  })),\n  \n  // Formatted text for AI prompt\n  promptText: `Today's Weather Summary:\n\nCURRENT CONDITIONS (${current.displayDateTime.hours}:00):\n- Temperature: ${current.temperature.degrees}°C (feels like ${current.feelsLikeTemperature.degrees}°C)\n- Conditions: ${current.weatherCondition.description.text}\n- Humidity: ${current.relativeHumidity}%\n- Wind: ${current.wind.speed.value} km/h from the ${current.wind.direction.cardinal.toLowerCase().replace(/_/g, '-')}\n- UV Index: ${current.uvIndex}\n- Chance of rain: ${current.precipitation.probability.percent}%\n\nTODAY'S FORECAST:\n- High: ${highTemp}°C\n- Low: ${lowTemp}°C\n- Conditions throughout day: ${[...new Set(dayForecasts.map(h => h.weatherCondition.description.text))].join(', ')}\n- Maximum rain chance: ${maxRainChance}%\n\nNEXT 12 HOURS:\n${next12Hours.map(h => \n  `${h.displayDateTime.hours}:00 - ${h.temperature.degrees}°C, ${h.weatherCondition.description.text}, ${h.precipitation.probability.percent}% rain`\n).join('\\n')}\n\nPlease provide a friendly weather summary based on this data.`\n};\n\nreturn {\n  json: formattedData\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        672,
+        96
+      ],
+      "id": "d1511000-80a0-4a77-aca0-f4e7bcad9108",
+      "name": "Generate prompt"
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "guildId": {
+          "__rl": true,
+          "value": "1448492576758956196",
+          "mode": "list",
+          "cachedResultName": "n8n8n8n",
+          "cachedResultUrl": "https://discord.com/channels/1448492576758956196"
+        },
+        "channelId": {
+          "__rl": true,
+          "value": "1448493662425190500",
+          "mode": "list",
+          "cachedResultName": "weather-updates🌞",
+          "cachedResultUrl": "https://discord.com/channels/1448492576758956196/1448493662425190500"
+        },
+        "content": "={{$now.toLocaleString({dateStyle: 'full'})}}\n{{ $json.content.parts[0].text }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        1248,
+        96
+      ],
+      "id": "3913c78d-2d85-498f-9a3d-280f6712ef33",
+      "name": "Notify Discord",
+      "webhookId": "f43964d9-84ec-46f6-928d-cf6139b5e44c",
+      "credentials": {
+        "discordBotApi": {
+          "id": "0q4bkczLogSD1luU",
+          "name": "Discord Bot account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 8
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "ac73d234-449a-40d5-90c7-42793981b2f5",
+      "name": "Schedule Trigger"
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get Longitude/Latitude",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Longitude/Latitude": {
+      "main": [
+        [
+          {
+            "node": "Get Hourly Forecast",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Hourly Forecast": {
+      "main": [
+        [
+          {
+            "node": "Generate prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate prompt": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Notify Discord",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Longitude/Latitude",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "3cab2a82-c2ad-4ae2-83d8-97f39d0db4f5",
+  "activeVersionId": "3cab2a82-c2ad-4ae2-83d8-97f39d0db4f5",
+  "triggerCount": 1,
+  "shared": [
+    {
+      "updatedAt": "2025-12-13T04:57:38.986Z",
+      "createdAt": "2025-12-13T04:57:38.986Z",
+      "role": "workflow:owner",
+      "workflowId": "vZCByZUyKXAkIuG8",
+      "projectId": "Zegp8TetQgawftof"
+    }
+  ],
+  "activeVersion": {
+    "updatedAt": "2025-12-14T01:12:48.635Z",
+    "createdAt": "2025-12-14T01:12:48.635Z",
+    "versionId": "3cab2a82-c2ad-4ae2-83d8-97f39d0db4f5",
+    "workflowId": "vZCByZUyKXAkIuG8",
+    "nodes": [
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.manualTrigger",
+        "typeVersion": 1,
+        "position": [
+          0,
+          192
+        ],
+        "id": "1c1673d7-df3a-4af8-a006-172c8833defe",
+        "name": "When clicking ‘Execute workflow’"
+      },
+      {
+        "parameters": {
+          "url": "https://maps.googleapis.com/maps/api/geocode/json",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpQueryAuth",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "address",
+                "value": "Auckland, New Zealand"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.3,
+        "position": [
+          224,
+          96
+        ],
+        "id": "04d3971e-4b3e-4e64-b633-65a752a66c0e",
+        "name": "Get Longitude/Latitude",
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "gkNOjQWO8lCCJVkx",
+            "name": "Google API (n8n-dev)"
+          },
+          "httpQueryAuth": {
+            "id": "bEyikR60OnVCyaMN",
+            "name": "Google API (n8n-dev)"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "url": "https://weather.googleapis.com/v1/forecast/hours:lookup",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpQueryAuth",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "location.latitude",
+                "value": "={{ $json.results[0].geometry.location.lat }}"
+              },
+              {
+                "name": "location.longitude",
+                "value": "={{ $json.results[0].geometry.location.lng }}"
+              },
+              {
+                "name": "hours",
+                "value": "24"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.3,
+        "position": [
+          448,
+          96
+        ],
+        "id": "404ce7d6-03ba-44c3-af08-de31e9da1d7e",
+        "name": "Get Hourly Forecast",
+        "credentials": {
+          "httpQueryAuth": {
+            "id": "bEyikR60OnVCyaMN",
+            "name": "Google API (n8n-dev)"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "modelId": {
+            "__rl": true,
+            "value": "models/gemini-2.5-flash",
+            "mode": "list",
+            "cachedResultName": "models/gemini-2.5-flash"
+          },
+          "messages": {
+            "values": [
+              {
+                "content": "={{ $json.promptText }}"
+              }
+            ]
+          },
+          "options": {
+            "systemMessage": "You are a cheerful and enthusiastic weather assistant who transforms raw weather data into engaging, personalized daily forecasts. Your goal is to help people start their day informed and prepared.  ## Your Role - Analyze weather data (temperature, conditions, humidity, wind, etc.) and create a friendly, conversational summary - Provide practical advice on what to wear and what to bring (umbrella, sunscreen, jacket, etc.) - Highlight any notable weather conditions or changes throughout the day - Use a warm, upbeat tone that makes checking the weather feel like chatting with a helpful friend - Be concise but informative - aim for 5 short sentences maximum  ## Style Guidelines - Start with a friendly greeting appropriate to the weather (e.g., \"Good morning! ☀️\" or \"Rise and shine! 🌧️\") - Use emojis sparingly but effectively to add personality - Avoid robotic or overly formal language - Include one light joke or playful comment when appropriate (but don't force it) - End with an encouraging sign-off  ## What to Include 1. **Current conditions**: Temperature, \"feels like\" temp, and overall weather description 2. **Comfort factors**: Humidity levels if notable, wind conditions if significant 3. **Practical advice**: Clothing suggestions, whether to bring an umbrella/sunglasses/layers 4. **Day outlook**: If data includes hourly forecasts, mention any changes expected (morning vs afternoon) 5. **Activity suggestions**: Brief mention if it's a great day for outdoor activities or better to stay cozy inside  ## What to Avoid - Don't just repeat the raw numbers - interpret them - Don't be overly dramatic about normal weather - Don't provide safety warnings for extreme weather you're not qualified to assess - Don't make the message too long - keep it scannable  ## Example Tone Instead of: \"Temperature: 18°C, Partly cloudy, Humidity: 65%\" Say: \"Good morning! It's a pleasant 18°C out there with some clouds playing peek-a-boo with the sun. You'll want a light jacket for the morning, but you might shed it by afternoon!\"  Transform the weather data into a message that makes people smile while helping them plan their day confidently."
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.googleGemini",
+        "typeVersion": 1,
+        "position": [
+          896,
+          96
+        ],
+        "id": "dcf4dc04-4aa9-47b5-bf8d-7cc64b93df9e",
+        "name": "Message a model",
+        "credentials": {
+          "googlePalmApi": {
+            "id": "tOoDRZ6WLhIjmMdq",
+            "name": "Google Gemini(PaLM) Api account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "// Extract the weather data from the API response\nconst weatherData = $input.first().json;\nconst forecastHours = weatherData.forecastHours;\n\n// Get current hour (first item in the array)\nconst current = forecastHours[0];\n\n// Get the next few hours for trends\nconst next12Hours = forecastHours.slice(0, 13);\n\n// Find day and evening forecasts\nconst dayForecasts = forecastHours.filter(h => h.isDaytime);\nconst eveningForecasts = forecastHours.filter(h => !h.isDaytime);\n\n// Calculate high/low for the day\nconst dayTemps = dayForecasts.map(h => h.temperature.degrees);\nconst highTemp = Math.max(...dayTemps);\nconst lowTemp = Math.min(...dayTemps);\n\n// Check for rain chances\nconst rainChances = forecastHours.map(h => h.precipitation.probability.percent);\nconst maxRainChance = Math.max(...rainChances);\n\n// Format a readable summary\nconst formattedData = {\n  currentConditions: {\n    time: `${current.displayDateTime.hours}:00`,\n    temperature: current.temperature.degrees,\n    feelsLike: current.feelsLikeTemperature.degrees,\n    condition: current.weatherCondition.description.text,\n    humidity: current.relativeHumidity,\n    windSpeed: current.wind.speed.value,\n    windDirection: current.wind.direction.cardinal,\n    uvIndex: current.uvIndex,\n    rainChance: current.precipitation.probability.percent\n  },\n  \n  dayOverview: {\n    highTemp: highTemp,\n    lowTemp: lowTemp,\n    maxRainChance: maxRainChance,\n    summaryConditions: [...new Set(dayForecasts.map(h => h.weatherCondition.description.text))].join(', ')\n  },\n  \n  next12Hours: next12Hours.map(h => ({\n    time: `${h.displayDateTime.hours}:00`,\n    temp: h.temperature.degrees,\n    condition: h.weatherCondition.description.text,\n    rainChance: h.precipitation.probability.percent\n  })),\n  \n  // Formatted text for AI prompt\n  promptText: `Today's Weather Summary:\n\nCURRENT CONDITIONS (${current.displayDateTime.hours}:00):\n- Temperature: ${current.temperature.degrees}°C (feels like ${current.feelsLikeTemperature.degrees}°C)\n- Conditions: ${current.weatherCondition.description.text}\n- Humidity: ${current.relativeHumidity}%\n- Wind: ${current.wind.speed.value} km/h from the ${current.wind.direction.cardinal.toLowerCase().replace(/_/g, '-')}\n- UV Index: ${current.uvIndex}\n- Chance of rain: ${current.precipitation.probability.percent}%\n\nTODAY'S FORECAST:\n- High: ${highTemp}°C\n- Low: ${lowTemp}°C\n- Conditions throughout day: ${[...new Set(dayForecasts.map(h => h.weatherCondition.description.text))].join(', ')}\n- Maximum rain chance: ${maxRainChance}%\n\nNEXT 12 HOURS:\n${next12Hours.map(h => \n  `${h.displayDateTime.hours}:00 - ${h.temperature.degrees}°C, ${h.weatherCondition.description.text}, ${h.precipitation.probability.percent}% rain`\n).join('\\n')}\n\nPlease provide a friendly weather summary based on this data.`\n};\n\nreturn {\n  json: formattedData\n};"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          672,
+          96
+        ],
+        "id": "d1511000-80a0-4a77-aca0-f4e7bcad9108",
+        "name": "Generate prompt"
+      },
+      {
+        "parameters": {
+          "resource": "message",
+          "guildId": {
+            "__rl": true,
+            "value": "1448492576758956196",
+            "mode": "list",
+            "cachedResultName": "n8n8n8n",
+            "cachedResultUrl": "https://discord.com/channels/1448492576758956196"
+          },
+          "channelId": {
+            "__rl": true,
+            "value": "1448493662425190500",
+            "mode": "list",
+            "cachedResultName": "weather-updates🌞",
+            "cachedResultUrl": "https://discord.com/channels/1448492576758956196/1448493662425190500"
+          },
+          "content": "={{$now.toLocaleString({dateStyle: 'full'})}}\n{{ $json.content.parts[0].text }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.discord",
+        "typeVersion": 2,
+        "position": [
+          1248,
+          96
+        ],
+        "id": "3913c78d-2d85-498f-9a3d-280f6712ef33",
+        "name": "Notify Discord",
+        "webhookId": "f43964d9-84ec-46f6-928d-cf6139b5e44c",
+        "credentials": {
+          "discordBotApi": {
+            "id": "0q4bkczLogSD1luU",
+            "name": "Discord Bot account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "triggerAtHour": 8
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.3,
+        "position": [
+          0,
+          0
+        ],
+        "id": "ac73d234-449a-40d5-90c7-42793981b2f5",
+        "name": "Schedule Trigger"
+      }
+    ],
+    "connections": {
+      "When clicking ‘Execute workflow’": {
+        "main": [
+          [
+            {
+              "node": "Get Longitude/Latitude",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get Longitude/Latitude": {
+        "main": [
+          [
+            {
+              "node": "Get Hourly Forecast",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get Hourly Forecast": {
+        "main": [
+          [
+            {
+              "node": "Generate prompt",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Generate prompt": {
+        "main": [
+          [
+            {
+              "node": "Message a model",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Message a model": {
+        "main": [
+          [
+            {
+              "node": "Notify Discord",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Schedule Trigger": {
+        "main": [
+          [
+            {
+              "node": "Get Longitude/Latitude",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Keshav Bharani",
+    "name": null,
+    "description": null
+  },
+  "tags": []
+}
