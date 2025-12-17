@@ -1,0 +1,670 @@
+{
+  "updatedAt": "2025-12-17T09:21:38.280Z",
+  "createdAt": "2025-12-17T08:06:55.958Z",
+  "id": "nSKe6NEctMGh41rT",
+  "name": "EXchange Notification",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -96
+      ],
+      "id": "055a57a2-6137-42b3-9c3c-0ddba8b7d287",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "b4672def-ef0d-4b8b-8359-d65df5dcef17",
+              "leftValue": "={{ $json.title }}",
+              "rightValue": "EXchange/Transit Love Season 4",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "5abbc726-c782-4540-a920-41b5a36b5e24",
+              "leftValue": "={{ $json.title.split(' - ')[2]?.toDateTime('yyMMdd').diffToNow('days').abs() }}",
+              "rightValue": 3,
+              "operator": {
+                "type": "number",
+                "operation": "lt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        448,
+        0
+      ],
+      "id": "73ded9b4-ec75-46fd-8abc-0cc0cd8523ed",
+      "name": "Filter EXchange post"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "2e2119f9-a8aa-42b0-9096-4ed98238d27c",
+              "leftValue": "={{ $json.selftext }}",
+              "rightValue": "~BRB whenever possible",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              }
+            },
+            {
+              "id": "3c755aa7-7a88-4254-996c-3669409e3683",
+              "leftValue": "={{ $json.link_flair_richtext[0].t }}",
+              "rightValue": "Raw - Reality",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        896,
+        96
+      ],
+      "id": "e50d6693-e1ea-459b-b514-9fd9ef7e3787",
+      "name": "If AI subs released"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "3d8d756e-78ce-4110-b96e-a5d606fba564",
+              "leftValue": "={{ $json.link_flair_richtext[0].t }}",
+              "rightValue": "Subtitled - Reality",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        672,
+        0
+      ],
+      "id": "4542368d-cb45-44d3-8215-9ddbd0775605",
+      "name": "If official subs released"
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "guildId": {
+          "__rl": true,
+          "value": "1448492576758956196",
+          "mode": "list",
+          "cachedResultName": "n8n8n8n",
+          "cachedResultUrl": "https://discord.com/channels/1448492576758956196"
+        },
+        "channelId": {
+          "__rl": true,
+          "value": "1448600243649249361",
+          "mode": "list",
+          "cachedResultName": "media-updates📺",
+          "cachedResultUrl": "https://discord.com/channels/1448492576758956196/1448600243649249361"
+        },
+        "content": "=**{{ $json.title }}** has been released with official subs!\nLink: {{ $json.url }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        896,
+        -96
+      ],
+      "id": "08eafcdb-08b2-42eb-a818-19478a2f0a26",
+      "name": "Notify official subs released",
+      "webhookId": "7889af30-fc90-49a1-b6b0-4e836e5b2b46",
+      "credentials": {
+        "discordBotApi": {
+          "id": "0q4bkczLogSD1luU",
+          "name": "Discord Bot account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "guildId": {
+          "__rl": true,
+          "value": "1448492576758956196",
+          "mode": "list",
+          "cachedResultName": "n8n8n8n",
+          "cachedResultUrl": "https://discord.com/channels/1448492576758956196"
+        },
+        "channelId": {
+          "__rl": true,
+          "value": "1448600243649249361",
+          "mode": "list",
+          "cachedResultName": "media-updates📺",
+          "cachedResultUrl": "https://discord.com/channels/1448492576758956196/1448600243649249361"
+        },
+        "content": "=**{{ $json.title }}** has been released with AI subs!\nLink: {{ $json.url }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        96
+      ],
+      "id": "ea613bcd-a5ad-4b7f-9f0d-04803418df76",
+      "name": "Notify AI subs released",
+      "webhookId": "7889af30-fc90-49a1-b6b0-4e836e5b2b46",
+      "credentials": {
+        "discordBotApi": {
+          "id": "0q4bkczLogSD1luU",
+          "name": "Discord Bot account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "*/15 * * * 4"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        96
+      ],
+      "id": "97ae7c24-d0e8-4589-976e-18cabf1ed565",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "resource": "user",
+        "username": "MNLYYZYEG",
+        "details": "submitted",
+        "limit": 10
+      },
+      "type": "n8n-nodes-base.reddit",
+      "typeVersion": 1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "556cc329-aac2-4e2e-a6c2-6e5469aad719",
+      "name": "Get posts from user"
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get posts from user",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter EXchange post": {
+      "main": [
+        [
+          {
+            "node": "If official subs released",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If official subs released": {
+      "main": [
+        [
+          {
+            "node": "Notify official subs released",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If AI subs released",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If AI subs released": {
+      "main": [
+        [
+          {
+            "node": "Notify AI subs released",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get posts from user",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get posts from user": {
+      "main": [
+        [
+          {
+            "node": "Filter EXchange post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "78611d52-efe6-4d4a-aca2-373f1d3942c3",
+  "activeVersionId": "78611d52-efe6-4d4a-aca2-373f1d3942c3",
+  "triggerCount": 1,
+  "shared": [
+    {
+      "updatedAt": "2025-12-17T08:06:55.977Z",
+      "createdAt": "2025-12-17T08:06:55.977Z",
+      "role": "workflow:owner",
+      "workflowId": "nSKe6NEctMGh41rT",
+      "projectId": "Zegp8TetQgawftof"
+    }
+  ],
+  "activeVersion": {
+    "updatedAt": "2025-12-17T09:21:42.000Z",
+    "createdAt": "2025-12-17T09:21:38.284Z",
+    "versionId": "78611d52-efe6-4d4a-aca2-373f1d3942c3",
+    "workflowId": "nSKe6NEctMGh41rT",
+    "nodes": [
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.manualTrigger",
+        "typeVersion": 1,
+        "position": [
+          0,
+          -96
+        ],
+        "id": "055a57a2-6137-42b3-9c3c-0ddba8b7d287",
+        "name": "When clicking ‘Execute workflow’"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 3
+            },
+            "conditions": [
+              {
+                "id": "b4672def-ef0d-4b8b-8359-d65df5dcef17",
+                "leftValue": "={{ $json.title }}",
+                "rightValue": "EXchange/Transit Love Season 4",
+                "operator": {
+                  "type": "string",
+                  "operation": "contains"
+                }
+              },
+              {
+                "id": "5abbc726-c782-4540-a920-41b5a36b5e24",
+                "leftValue": "={{ $json.title.split(' - ')[2]?.toDateTime('yyMMdd').diffToNow('days').abs() }}",
+                "rightValue": 3,
+                "operator": {
+                  "type": "number",
+                  "operation": "lt"
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.filter",
+        "typeVersion": 2.3,
+        "position": [
+          448,
+          0
+        ],
+        "id": "73ded9b4-ec75-46fd-8abc-0cc0cd8523ed",
+        "name": "Filter EXchange post"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 3
+            },
+            "conditions": [
+              {
+                "id": "2e2119f9-a8aa-42b0-9096-4ed98238d27c",
+                "leftValue": "={{ $json.selftext }}",
+                "rightValue": "~BRB whenever possible",
+                "operator": {
+                  "type": "string",
+                  "operation": "notContains"
+                }
+              },
+              {
+                "id": "3c755aa7-7a88-4254-996c-3669409e3683",
+                "leftValue": "={{ $json.link_flair_richtext[0].t }}",
+                "rightValue": "Raw - Reality",
+                "operator": {
+                  "type": "string",
+                  "operation": "equals",
+                  "name": "filter.operator.equals"
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.3,
+        "position": [
+          896,
+          96
+        ],
+        "id": "e50d6693-e1ea-459b-b514-9fd9ef7e3787",
+        "name": "If AI subs released"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 3
+            },
+            "conditions": [
+              {
+                "id": "3d8d756e-78ce-4110-b96e-a5d606fba564",
+                "leftValue": "={{ $json.link_flair_richtext[0].t }}",
+                "rightValue": "Subtitled - Reality",
+                "operator": {
+                  "type": "string",
+                  "operation": "equals"
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.3,
+        "position": [
+          672,
+          0
+        ],
+        "id": "4542368d-cb45-44d3-8215-9ddbd0775605",
+        "name": "If official subs released"
+      },
+      {
+        "parameters": {
+          "resource": "message",
+          "guildId": {
+            "__rl": true,
+            "value": "1448492576758956196",
+            "mode": "list",
+            "cachedResultName": "n8n8n8n",
+            "cachedResultUrl": "https://discord.com/channels/1448492576758956196"
+          },
+          "channelId": {
+            "__rl": true,
+            "value": "1448600243649249361",
+            "mode": "list",
+            "cachedResultName": "media-updates📺",
+            "cachedResultUrl": "https://discord.com/channels/1448492576758956196/1448600243649249361"
+          },
+          "content": "=**{{ $json.title }}** has been released with official subs!\nLink: {{ $json.url }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.discord",
+        "typeVersion": 2,
+        "position": [
+          896,
+          -96
+        ],
+        "id": "08eafcdb-08b2-42eb-a818-19478a2f0a26",
+        "name": "Notify official subs released",
+        "webhookId": "7889af30-fc90-49a1-b6b0-4e836e5b2b46",
+        "credentials": {
+          "discordBotApi": {
+            "id": "0q4bkczLogSD1luU",
+            "name": "Discord Bot account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "resource": "message",
+          "guildId": {
+            "__rl": true,
+            "value": "1448492576758956196",
+            "mode": "list",
+            "cachedResultName": "n8n8n8n",
+            "cachedResultUrl": "https://discord.com/channels/1448492576758956196"
+          },
+          "channelId": {
+            "__rl": true,
+            "value": "1448600243649249361",
+            "mode": "list",
+            "cachedResultName": "media-updates📺",
+            "cachedResultUrl": "https://discord.com/channels/1448492576758956196/1448600243649249361"
+          },
+          "content": "=**{{ $json.title }}** has been released with AI subs!\nLink: {{ $json.url }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.discord",
+        "typeVersion": 2,
+        "position": [
+          1120,
+          96
+        ],
+        "id": "ea613bcd-a5ad-4b7f-9f0d-04803418df76",
+        "name": "Notify AI subs released",
+        "webhookId": "7889af30-fc90-49a1-b6b0-4e836e5b2b46",
+        "credentials": {
+          "discordBotApi": {
+            "id": "0q4bkczLogSD1luU",
+            "name": "Discord Bot account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "field": "cronExpression",
+                "expression": "*/15 * * * 4"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.3,
+        "position": [
+          0,
+          96
+        ],
+        "id": "97ae7c24-d0e8-4589-976e-18cabf1ed565",
+        "name": "Schedule Trigger"
+      },
+      {
+        "parameters": {
+          "resource": "user",
+          "username": "MNLYYZYEG",
+          "details": "submitted",
+          "limit": 10
+        },
+        "type": "n8n-nodes-base.reddit",
+        "typeVersion": 1,
+        "position": [
+          224,
+          0
+        ],
+        "id": "556cc329-aac2-4e2e-a6c2-6e5469aad719",
+        "name": "Get posts from user"
+      }
+    ],
+    "connections": {
+      "When clicking ‘Execute workflow’": {
+        "main": [
+          [
+            {
+              "node": "Get posts from user",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Filter EXchange post": {
+        "main": [
+          [
+            {
+              "node": "If official subs released",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "If official subs released": {
+        "main": [
+          [
+            {
+              "node": "Notify official subs released",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "If AI subs released",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "If AI subs released": {
+        "main": [
+          [
+            {
+              "node": "Notify AI subs released",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Schedule Trigger": {
+        "main": [
+          [
+            {
+              "node": "Get posts from user",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get posts from user": {
+        "main": [
+          [
+            {
+              "node": "Filter EXchange post",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Keshav Bharani",
+    "name": "v1.0.0",
+    "description": ""
+  },
+  "tags": []
+}
