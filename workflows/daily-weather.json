@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-12-14T01:12:48.631Z",
+  "updatedAt": "2025-12-16T10:10:49.444Z",
   "createdAt": "2025-12-13T04:57:38.978Z",
   "id": "vZCByZUyKXAkIuG8",
   "name": "Daily weather",
@@ -161,8 +161,8 @@
       "type": "n8n-nodes-base.discord",
       "typeVersion": 2,
       "position": [
-        1248,
-        96
+        1392,
+        208
       ],
       "id": "3913c78d-2d85-498f-9a3d-280f6712ef33",
       "name": "Notify Discord",
@@ -192,6 +192,71 @@
       ],
       "id": "ac73d234-449a-40d5-90c7-42793981b2f5",
       "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "path": "d086f11e-3d86-42cf-8749-ec5d25e892f3",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        400
+      ],
+      "id": "c13fefca-f3f4-42cb-8350-3e51b79b3299",
+      "name": "Webhook",
+      "webhookId": "d086f11e-3d86-42cf-8749-ec5d25e892f3"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"description\": \"{{ $json.content.parts[0].text }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1392,
+        -16
+      ],
+      "id": "72fc58f9-9b8e-4bb1-9459-62d8c9e068ac",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "7b7937a8-2bca-47cb-9bf3-64830b2c32d5",
+              "leftValue": "={{ $('Webhook').isExecuted }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1168,
+        96
+      ],
+      "id": "f4e1590b-f19b-43c4-9cfe-382d42f2f451",
+      "name": "If triggered by webhook"
     }
   ],
   "connections": {
@@ -243,7 +308,7 @@
       "main": [
         [
           {
-            "node": "Notify Discord",
+            "node": "If triggered by webhook",
             "type": "main",
             "index": 0
           }
@@ -255,6 +320,35 @@
         [
           {
             "node": "Get Longitude/Latitude",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get Longitude/Latitude",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If triggered by webhook": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Notify Discord",
             "type": "main",
             "index": 0
           }
@@ -274,9 +368,9 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "3cab2a82-c2ad-4ae2-83d8-97f39d0db4f5",
-  "activeVersionId": "3cab2a82-c2ad-4ae2-83d8-97f39d0db4f5",
-  "triggerCount": 1,
+  "versionId": "1723864c-8002-4dee-acf6-75596435cb66",
+  "activeVersionId": "1723864c-8002-4dee-acf6-75596435cb66",
+  "triggerCount": 2,
   "shared": [
     {
       "updatedAt": "2025-12-13T04:57:38.986Z",
@@ -287,9 +381,9 @@
     }
   ],
   "activeVersion": {
-    "updatedAt": "2025-12-14T01:12:48.635Z",
-    "createdAt": "2025-12-14T01:12:48.635Z",
-    "versionId": "3cab2a82-c2ad-4ae2-83d8-97f39d0db4f5",
+    "updatedAt": "2025-12-16T10:11:08.000Z",
+    "createdAt": "2025-12-16T10:10:49.452Z",
+    "versionId": "1723864c-8002-4dee-acf6-75596435cb66",
     "workflowId": "vZCByZUyKXAkIuG8",
     "nodes": [
       {
@@ -447,8 +541,8 @@
         "type": "n8n-nodes-base.discord",
         "typeVersion": 2,
         "position": [
-          1248,
-          96
+          1392,
+          208
         ],
         "id": "3913c78d-2d85-498f-9a3d-280f6712ef33",
         "name": "Notify Discord",
@@ -478,6 +572,71 @@
         ],
         "id": "ac73d234-449a-40d5-90c7-42793981b2f5",
         "name": "Schedule Trigger"
+      },
+      {
+        "parameters": {
+          "path": "d086f11e-3d86-42cf-8749-ec5d25e892f3",
+          "responseMode": "responseNode",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2.1,
+        "position": [
+          0,
+          400
+        ],
+        "id": "c13fefca-f3f4-42cb-8350-3e51b79b3299",
+        "name": "Webhook",
+        "webhookId": "d086f11e-3d86-42cf-8749-ec5d25e892f3"
+      },
+      {
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={\n  \"description\": \"{{ $json.content.parts[0].text }}\"\n}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.5,
+        "position": [
+          1392,
+          -16
+        ],
+        "id": "72fc58f9-9b8e-4bb1-9459-62d8c9e068ac",
+        "name": "Respond to Webhook"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 3
+            },
+            "conditions": [
+              {
+                "id": "7b7937a8-2bca-47cb-9bf3-64830b2c32d5",
+                "leftValue": "={{ $('Webhook').isExecuted }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "boolean",
+                  "operation": "true",
+                  "singleValue": true
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.3,
+        "position": [
+          1168,
+          96
+        ],
+        "id": "f4e1590b-f19b-43c4-9cfe-382d42f2f451",
+        "name": "If triggered by webhook"
       }
     ],
     "connections": {
@@ -529,7 +688,7 @@
         "main": [
           [
             {
-              "node": "Notify Discord",
+              "node": "If triggered by webhook",
               "type": "main",
               "index": 0
             }
@@ -546,11 +705,40 @@
             }
           ]
         ]
+      },
+      "Webhook": {
+        "main": [
+          [
+            {
+              "node": "Get Longitude/Latitude",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "If triggered by webhook": {
+        "main": [
+          [
+            {
+              "node": "Respond to Webhook",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Notify Discord",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
       }
     },
     "authors": "Keshav Bharani",
-    "name": null,
-    "description": null
+    "name": "v2.0.0",
+    "description": ""
   },
   "tags": []
 }
