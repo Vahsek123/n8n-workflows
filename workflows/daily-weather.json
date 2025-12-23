@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-12-14T01:12:48.631Z",
+  "updatedAt": "2025-12-24T00:36:55.799Z",
   "createdAt": "2025-12-13T04:57:38.978Z",
   "id": "vZCByZUyKXAkIuG8",
   "name": "Daily weather",
@@ -11,8 +11,8 @@
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        0,
-        192
+        -80,
+        168
       ],
       "id": "1c1673d7-df3a-4af8-a006-172c8833defe",
       "name": "When clicking ‘Execute workflow’"
@@ -20,8 +20,6 @@
     {
       "parameters": {
         "url": "https://maps.googleapis.com/maps/api/geocode/json",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpQueryAuth",
         "sendQuery": true,
         "queryParameters": {
           "parameters": [
@@ -36,21 +34,13 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        224,
-        96
+        144,
+        168
       ],
       "id": "04d3971e-4b3e-4e64-b633-65a752a66c0e",
       "name": "Get Longitude/Latitude",
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "gkNOjQWO8lCCJVkx",
-          "name": "Google API (n8n-dev)"
-        },
-        "httpQueryAuth": {
-          "id": "bEyikR60OnVCyaMN",
-          "name": "Google API (n8n-dev)"
-        }
-      }
+      "retryOnFail": true,
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -79,17 +69,19 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        448,
-        96
+        592,
+        24
       ],
       "id": "404ce7d6-03ba-44c3-af08-de31e9da1d7e",
       "name": "Get Hourly Forecast",
+      "retryOnFail": true,
       "credentials": {
         "httpQueryAuth": {
-          "id": "bEyikR60OnVCyaMN",
-          "name": "Google API (n8n-dev)"
+          "id": "MvjUsPe2F2yAjkJ3",
+          "name": "Google API"
         }
-      }
+      },
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -113,17 +105,20 @@
       "type": "@n8n/n8n-nodes-langchain.googleGemini",
       "typeVersion": 1,
       "position": [
-        896,
-        96
+        1040,
+        -48
       ],
       "id": "dcf4dc04-4aa9-47b5-bf8d-7cc64b93df9e",
       "name": "Message a model",
+      "retryOnFail": true,
+      "maxTries": 2,
       "credentials": {
         "googlePalmApi": {
-          "id": "tOoDRZ6WLhIjmMdq",
+          "id": "rnFSzlvICyu1FztM",
           "name": "Google Gemini(PaLM) Api account"
         }
-      }
+      },
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -132,8 +127,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        672,
-        96
+        816,
+        -48
       ],
       "id": "d1511000-80a0-4a77-aca0-f4e7bcad9108",
       "name": "Generate prompt"
@@ -161,8 +156,8 @@
       "type": "n8n-nodes-base.discord",
       "typeVersion": 2,
       "position": [
-        1248,
-        96
+        1616,
+        0
       ],
       "id": "3913c78d-2d85-498f-9a3d-280f6712ef33",
       "name": "Notify Discord",
@@ -187,11 +182,145 @@
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.3,
       "position": [
-        0,
-        0
+        -80,
+        360
       ],
       "id": "ac73d234-449a-40d5-90c7-42793981b2f5",
       "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "path": "d086f11e-3d86-42cf-8749-ec5d25e892f3",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -80,
+        -24
+      ],
+      "id": "c13fefca-f3f4-42cb-8350-3e51b79b3299",
+      "name": "Webhook",
+      "webhookId": "d086f11e-3d86-42cf-8749-ec5d25e892f3"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"description\": \"{{ $json.content.parts[0].text }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1616,
+        -192
+      ],
+      "id": "72fc58f9-9b8e-4bb1-9459-62d8c9e068ac",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "7b7937a8-2bca-47cb-9bf3-64830b2c32d5",
+              "leftValue": "={{ $('Webhook').isExecuted }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1392,
+        -96
+      ],
+      "id": "f4e1590b-f19b-43c4-9cfe-382d42f2f451",
+      "name": "If triggered by webhook"
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "guildId": {
+          "__rl": true,
+          "value": "1448492576758956196",
+          "mode": "list",
+          "cachedResultName": "n8n8n8n",
+          "cachedResultUrl": "https://discord.com/channels/1448492576758956196"
+        },
+        "channelId": {
+          "__rl": true,
+          "value": "1453174481496572208",
+          "mode": "list",
+          "cachedResultName": "workflow-errors⚠️",
+          "cachedResultUrl": "https://discord.com/channels/1448492576758956196/1453174481496572208"
+        },
+        "content": "={{ $now.toLocaleString({dateStyle: 'full'}) }}\nWorkflow: Daily Weather\nNode: {{ $prevNode.name }}\nError: {{ $json.toJsonString() }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        1616,
+        208
+      ],
+      "id": "35434780-b124-4226-a2c1-19f49424c8df",
+      "name": "Send error",
+      "webhookId": "26897aa1-95eb-446b-b8ee-65cced79febd",
+      "credentials": {
+        "discordBotApi": {
+          "id": "0q4bkczLogSD1luU",
+          "name": "Discord Bot account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "63a03aa6-c10f-4582-953a-b91e7000ff01",
+              "leftValue": "={{ $json.body.status }}",
+              "rightValue": "OK",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        368,
+        96
+      ],
+      "id": "4d60e7b0-e670-4bec-a1fd-5ceb065efdaf",
+      "name": "If valid response"
     }
   ],
   "connections": {
@@ -210,7 +339,14 @@
       "main": [
         [
           {
-            "node": "Get Hourly Forecast",
+            "node": "If valid response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send error",
             "type": "main",
             "index": 0
           }
@@ -222,6 +358,13 @@
         [
           {
             "node": "Generate prompt",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send error",
             "type": "main",
             "index": 0
           }
@@ -243,7 +386,14 @@
       "main": [
         [
           {
-            "node": "Notify Discord",
+            "node": "If triggered by webhook",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send error",
             "type": "main",
             "index": 0
           }
@@ -255,6 +405,53 @@
         [
           {
             "node": "Get Longitude/Latitude",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get Longitude/Latitude",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If triggered by webhook": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Notify Discord",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If valid response": {
+      "main": [
+        [
+          {
+            "node": "Get Hourly Forecast",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send error",
             "type": "main",
             "index": 0
           }
@@ -274,9 +471,9 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "3cab2a82-c2ad-4ae2-83d8-97f39d0db4f5",
-  "activeVersionId": "3cab2a82-c2ad-4ae2-83d8-97f39d0db4f5",
-  "triggerCount": 1,
+  "versionId": "64d72103-06ef-4fcf-9849-b9c561e2d1b0",
+  "activeVersionId": "64d72103-06ef-4fcf-9849-b9c561e2d1b0",
+  "triggerCount": 2,
   "shared": [
     {
       "updatedAt": "2025-12-13T04:57:38.986Z",
@@ -287,9 +484,9 @@
     }
   ],
   "activeVersion": {
-    "updatedAt": "2025-12-14T01:12:48.635Z",
-    "createdAt": "2025-12-14T01:12:48.635Z",
-    "versionId": "3cab2a82-c2ad-4ae2-83d8-97f39d0db4f5",
+    "updatedAt": "2025-12-24T00:37:08.000Z",
+    "createdAt": "2025-12-24T00:36:55.803Z",
+    "versionId": "64d72103-06ef-4fcf-9849-b9c561e2d1b0",
     "workflowId": "vZCByZUyKXAkIuG8",
     "nodes": [
       {
@@ -297,8 +494,8 @@
         "type": "n8n-nodes-base.manualTrigger",
         "typeVersion": 1,
         "position": [
-          0,
-          192
+          -80,
+          168
         ],
         "id": "1c1673d7-df3a-4af8-a006-172c8833defe",
         "name": "When clicking ‘Execute workflow’"
@@ -306,8 +503,6 @@
       {
         "parameters": {
           "url": "https://maps.googleapis.com/maps/api/geocode/json",
-          "authentication": "genericCredentialType",
-          "genericAuthType": "httpQueryAuth",
           "sendQuery": true,
           "queryParameters": {
             "parameters": [
@@ -322,21 +517,13 @@
         "type": "n8n-nodes-base.httpRequest",
         "typeVersion": 4.3,
         "position": [
-          224,
-          96
+          144,
+          168
         ],
         "id": "04d3971e-4b3e-4e64-b633-65a752a66c0e",
         "name": "Get Longitude/Latitude",
-        "credentials": {
-          "httpHeaderAuth": {
-            "id": "gkNOjQWO8lCCJVkx",
-            "name": "Google API (n8n-dev)"
-          },
-          "httpQueryAuth": {
-            "id": "bEyikR60OnVCyaMN",
-            "name": "Google API (n8n-dev)"
-          }
-        }
+        "retryOnFail": true,
+        "onError": "continueErrorOutput"
       },
       {
         "parameters": {
@@ -365,17 +552,19 @@
         "type": "n8n-nodes-base.httpRequest",
         "typeVersion": 4.3,
         "position": [
-          448,
-          96
+          592,
+          24
         ],
         "id": "404ce7d6-03ba-44c3-af08-de31e9da1d7e",
         "name": "Get Hourly Forecast",
+        "retryOnFail": true,
         "credentials": {
           "httpQueryAuth": {
-            "id": "bEyikR60OnVCyaMN",
-            "name": "Google API (n8n-dev)"
+            "id": "MvjUsPe2F2yAjkJ3",
+            "name": "Google API"
           }
-        }
+        },
+        "onError": "continueErrorOutput"
       },
       {
         "parameters": {
@@ -399,17 +588,20 @@
         "type": "@n8n/n8n-nodes-langchain.googleGemini",
         "typeVersion": 1,
         "position": [
-          896,
-          96
+          1040,
+          -48
         ],
         "id": "dcf4dc04-4aa9-47b5-bf8d-7cc64b93df9e",
         "name": "Message a model",
+        "retryOnFail": true,
+        "maxTries": 2,
         "credentials": {
           "googlePalmApi": {
-            "id": "tOoDRZ6WLhIjmMdq",
+            "id": "rnFSzlvICyu1FztM",
             "name": "Google Gemini(PaLM) Api account"
           }
-        }
+        },
+        "onError": "continueErrorOutput"
       },
       {
         "parameters": {
@@ -418,8 +610,8 @@
         "type": "n8n-nodes-base.code",
         "typeVersion": 2,
         "position": [
-          672,
-          96
+          816,
+          -48
         ],
         "id": "d1511000-80a0-4a77-aca0-f4e7bcad9108",
         "name": "Generate prompt"
@@ -447,8 +639,8 @@
         "type": "n8n-nodes-base.discord",
         "typeVersion": 2,
         "position": [
-          1248,
-          96
+          1616,
+          0
         ],
         "id": "3913c78d-2d85-498f-9a3d-280f6712ef33",
         "name": "Notify Discord",
@@ -473,11 +665,145 @@
         "type": "n8n-nodes-base.scheduleTrigger",
         "typeVersion": 1.3,
         "position": [
-          0,
-          0
+          -80,
+          360
         ],
         "id": "ac73d234-449a-40d5-90c7-42793981b2f5",
         "name": "Schedule Trigger"
+      },
+      {
+        "parameters": {
+          "path": "d086f11e-3d86-42cf-8749-ec5d25e892f3",
+          "responseMode": "responseNode",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2.1,
+        "position": [
+          -80,
+          -24
+        ],
+        "id": "c13fefca-f3f4-42cb-8350-3e51b79b3299",
+        "name": "Webhook",
+        "webhookId": "d086f11e-3d86-42cf-8749-ec5d25e892f3"
+      },
+      {
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={\n  \"description\": \"{{ $json.content.parts[0].text }}\"\n}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.5,
+        "position": [
+          1616,
+          -192
+        ],
+        "id": "72fc58f9-9b8e-4bb1-9459-62d8c9e068ac",
+        "name": "Respond to Webhook"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 3
+            },
+            "conditions": [
+              {
+                "id": "7b7937a8-2bca-47cb-9bf3-64830b2c32d5",
+                "leftValue": "={{ $('Webhook').isExecuted }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "boolean",
+                  "operation": "true",
+                  "singleValue": true
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.3,
+        "position": [
+          1392,
+          -96
+        ],
+        "id": "f4e1590b-f19b-43c4-9cfe-382d42f2f451",
+        "name": "If triggered by webhook"
+      },
+      {
+        "parameters": {
+          "resource": "message",
+          "guildId": {
+            "__rl": true,
+            "value": "1448492576758956196",
+            "mode": "list",
+            "cachedResultName": "n8n8n8n",
+            "cachedResultUrl": "https://discord.com/channels/1448492576758956196"
+          },
+          "channelId": {
+            "__rl": true,
+            "value": "1453174481496572208",
+            "mode": "list",
+            "cachedResultName": "workflow-errors⚠️",
+            "cachedResultUrl": "https://discord.com/channels/1448492576758956196/1453174481496572208"
+          },
+          "content": "={{ $now.toLocaleString({dateStyle: 'full'}) }}\nWorkflow: Daily Weather\nNode: {{ $prevNode.name }}\nError: {{ $json.toJsonString() }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.discord",
+        "typeVersion": 2,
+        "position": [
+          1616,
+          208
+        ],
+        "id": "35434780-b124-4226-a2c1-19f49424c8df",
+        "name": "Send error",
+        "webhookId": "26897aa1-95eb-446b-b8ee-65cced79febd",
+        "credentials": {
+          "discordBotApi": {
+            "id": "0q4bkczLogSD1luU",
+            "name": "Discord Bot account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 3
+            },
+            "conditions": [
+              {
+                "id": "63a03aa6-c10f-4582-953a-b91e7000ff01",
+                "leftValue": "={{ $json.body.status }}",
+                "rightValue": "OK",
+                "operator": {
+                  "type": "string",
+                  "operation": "equals"
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.3,
+        "position": [
+          368,
+          96
+        ],
+        "id": "4d60e7b0-e670-4bec-a1fd-5ceb065efdaf",
+        "name": "If valid response"
       }
     ],
     "connections": {
@@ -496,7 +822,14 @@
         "main": [
           [
             {
-              "node": "Get Hourly Forecast",
+              "node": "If valid response",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Send error",
               "type": "main",
               "index": 0
             }
@@ -508,6 +841,13 @@
           [
             {
               "node": "Generate prompt",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Send error",
               "type": "main",
               "index": 0
             }
@@ -529,7 +869,14 @@
         "main": [
           [
             {
-              "node": "Notify Discord",
+              "node": "If triggered by webhook",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Send error",
               "type": "main",
               "index": 0
             }
@@ -546,11 +893,58 @@
             }
           ]
         ]
+      },
+      "Webhook": {
+        "main": [
+          [
+            {
+              "node": "Get Longitude/Latitude",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "If triggered by webhook": {
+        "main": [
+          [
+            {
+              "node": "Respond to Webhook",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Notify Discord",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "If valid response": {
+        "main": [
+          [
+            {
+              "node": "Get Hourly Forecast",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Send error",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
       }
     },
     "authors": "Keshav Bharani",
-    "name": null,
-    "description": null
+    "name": "v2.1.0",
+    "description": "Add error handling"
   },
   "tags": []
 }
