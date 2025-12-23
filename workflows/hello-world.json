@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-12-15T11:11:15.461Z",
+  "updatedAt": "2025-12-16T00:40:32.992Z",
   "createdAt": "2025-12-15T09:17:35.734Z",
   "id": "FmnH0NhOmDHVBsXK",
   "name": "Hello World",
@@ -19,16 +19,16 @@
     },
     {
       "parameters": {
-        "command": "echo \"Hello World!\""
+        "jsCode": "console.log(\"Hello World!\");\n\nreturn []"
       },
-      "type": "n8n-nodes-base.executeCommand",
-      "typeVersion": 1,
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
       "position": [
-        48,
+        32,
         -16
       ],
-      "id": "30acc833-4a98-4308-b3b8-bd3855f59860",
-      "name": "Execute Command"
+      "id": "1c88e325-6c8e-4f12-afae-9b415c5153b2",
+      "name": "Code in JavaScript"
     }
   ],
   "connections": {
@@ -36,7 +36,7 @@
       "main": [
         [
           {
-            "node": "Execute Command",
+            "node": "Code in JavaScript",
             "type": "main",
             "index": 0
           }
@@ -50,7 +50,7 @@
   "staticData": null,
   "meta": null,
   "pinData": {},
-  "versionId": "fa01e16f-2411-4488-bb9a-8b6803379027",
+  "versionId": "9eac0b58-66fd-48ac-b227-a2aea7202541",
   "activeVersionId": null,
   "triggerCount": 0,
   "shared": [
