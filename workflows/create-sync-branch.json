@@ -1,0 +1,10 @@
+{
+  "ref": "refs/heads/sync-new",
+  "node_id": "REF_kwDOQoRwN7NyZWZzL2hlYWRzL3N5bmMtbmV3",
+  "url": "https://api.github.com/repos/Vahsek123/n8n-workflows/git/refs/heads/sync-new",
+  "object": {
+    "sha": "9f4329958b3a70119b6628cfc4e8fdf21283291b",
+    "type": "commit",
+    "url": "https://api.github.com/repos/Vahsek123/n8n-workflows/git/commits/9f4329958b3a70119b6628cfc4e8fdf21283291b"
+  }
+}
