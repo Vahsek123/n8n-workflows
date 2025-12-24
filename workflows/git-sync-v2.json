@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-12-17T09:41:10.959Z",
+  "updatedAt": "2025-12-24T00:38:41.475Z",
   "createdAt": "2025-12-15T09:03:11.618Z",
   "id": "70Pr9e2vnC0YTVPT",
   "name": "Git Sync v2",
@@ -304,7 +304,7 @@
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "const workflowId = $('If n8n before GitHub').first().json.same.id;\nconst allDecoded = $('Decode to json').all();\n\nconst matched = allDecoded.find(item => item.json.id === workflowId);\n\nreturn matched \n  ? { json: { dataset: matched.json } }\n  : {};"
+        "jsCode": "const workflowId = $input.item.json.same.id;\nconst allDecoded = $('Decode to json').all();\n\nconst matched = allDecoded.find(item => item.json.id === workflowId);\n\nreturn matched \n  ? { json: { dataset: matched.json } }\n  : {};"
       },
       "id": "31b138e1-f953-4914-b00a-a61dfd37cb92",
       "name": "Code - InputB",
@@ -318,7 +318,7 @@
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "const workflowId = $('If n8n before GitHub').first().json.same.id;\nconst allDecoded = $('n8n').all();\n\nconst matched = allDecoded.find(item => item.json.id === workflowId);\n\nreturn matched \n  ? { json: { dataset: matched.json } }\n  : {};"
+        "jsCode": "const workflowId = $input.item.json.same.id;\nconst allDecoded = $('n8n').all();\n\nconst matched = allDecoded.find(item => item.json.id === workflowId);\n\nreturn matched \n  ? { json: { dataset: matched.json } }\n  : {};"
       },
       "id": "78e238d6-a826-452b-8774-32b216675266",
       "name": "Code - InputA",
@@ -907,8 +907,8 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "cc7ab7aa-8d34-4b1a-bdbc-9a65454eeb71",
-  "activeVersionId": "cc7ab7aa-8d34-4b1a-bdbc-9a65454eeb71",
+  "versionId": "f25615df-5ac3-411f-a41a-73559b70d822",
+  "activeVersionId": "f25615df-5ac3-411f-a41a-73559b70d822",
   "triggerCount": 1,
   "shared": [
     {
@@ -920,9 +920,9 @@
     }
   ],
   "activeVersion": {
-    "updatedAt": "2025-12-17T09:41:40.000Z",
-    "createdAt": "2025-12-17T09:41:10.965Z",
-    "versionId": "cc7ab7aa-8d34-4b1a-bdbc-9a65454eeb71",
+    "updatedAt": "2025-12-23T12:00:31.000Z",
+    "createdAt": "2025-12-23T11:58:54.863Z",
+    "versionId": "f25615df-5ac3-411f-a41a-73559b70d822",
     "workflowId": "70Pr9e2vnC0YTVPT",
     "nodes": [
       {
@@ -1223,7 +1223,7 @@
       {
         "parameters": {
           "mode": "runOnceForEachItem",
-          "jsCode": "const workflowId = $('If n8n before GitHub').first().json.same.id;\nconst allDecoded = $('Decode to json').all();\n\nconst matched = allDecoded.find(item => item.json.id === workflowId);\n\nreturn matched \n  ? { json: { dataset: matched.json } }\n  : {};"
+          "jsCode": "const workflowId = $input.item.json.same.id;\nconst allDecoded = $('Decode to json').all();\n\nconst matched = allDecoded.find(item => item.json.id === workflowId);\n\nreturn matched \n  ? { json: { dataset: matched.json } }\n  : {};"
         },
         "id": "31b138e1-f953-4914-b00a-a61dfd37cb92",
         "name": "Code - InputB",
@@ -1237,7 +1237,7 @@
       {
         "parameters": {
           "mode": "runOnceForEachItem",
-          "jsCode": "const workflowId = $('If n8n before GitHub').first().json.same.id;\nconst allDecoded = $('n8n').all();\n\nconst matched = allDecoded.find(item => item.json.id === workflowId);\n\nreturn matched \n  ? { json: { dataset: matched.json } }\n  : {};"
+          "jsCode": "const workflowId = $input.item.json.same.id;\nconst allDecoded = $('n8n').all();\n\nconst matched = allDecoded.find(item => item.json.id === workflowId);\n\nreturn matched \n  ? { json: { dataset: matched.json } }\n  : {};"
         },
         "id": "78e238d6-a826-452b-8774-32b216675266",
         "name": "Code - InputA",
@@ -1815,8 +1815,8 @@
       }
     },
     "authors": "Keshav Bharani",
-    "name": "v1.0.1",
-    "description": "Fix code nodes to run once for each item"
+    "name": "v1.0.2",
+    "description": "Fix code nodes to get the correct input"
   },
   "tags": []
 }
