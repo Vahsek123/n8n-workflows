@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-12-24T04:45:12.649Z",
+  "updatedAt": "2025-12-24T05:26:05.179Z",
   "createdAt": "2025-12-15T09:03:11.618Z",
   "id": "70Pr9e2vnC0YTVPT",
   "name": "Git Sync v2",
@@ -126,7 +126,7 @@
       "type": "n8n-nodes-base.github",
       "position": [
         320,
-        288
+        240
       ],
       "webhookId": "ce4b561b-acb9-4cd8-b76f-4928dada9674",
       "typeVersion": 1,
@@ -150,7 +150,7 @@
       "type": "n8n-nodes-base.convertToFile",
       "position": [
         -192,
-        288
+        240
       ],
       "typeVersion": 1.1
     },
@@ -164,7 +164,7 @@
       "type": "n8n-nodes-base.extractFromFile",
       "position": [
         -16,
-        288
+        240
       ],
       "typeVersion": 1
     },
@@ -203,7 +203,7 @@
         "commitMessage": "=n8n_backup_sync-{{ $('Edit for Update').item.json.commitDate }}",
         "additionalParameters": {
           "branch": {
-            "branch": "sync"
+            "branch": "={{ $('Set sync diff branch').item.json.sync_branch }}"
           }
         }
       },
@@ -353,7 +353,7 @@
       "type": "n8n-nodes-base.set",
       "position": [
         160,
-        288
+        240
       ],
       "typeVersion": 3.4
     },
@@ -389,7 +389,7 @@
     {
       "parameters": {
         "content": "## IF ONLY IN N8N\nUpdate GitHub with the relevant workflows",
-        "height": 320,
+        "height": 368,
         "width": 1096
       },
       "id": "d9078409-060f-4ffc-bb65-ab88385f961b",
@@ -397,7 +397,7 @@
       "type": "n8n-nodes-base.stickyNote",
       "position": [
         -624,
-        144
+        96
       ],
       "typeVersion": 1
     },
@@ -662,7 +662,7 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        32,
+        48,
         800
       ],
       "name": "Create Sync Diff Branch",
@@ -729,7 +729,7 @@
       "typeVersion": 1.2,
       "position": [
         -384,
-        288
+        240
       ],
       "name": "Create Sync New Branch",
       "id": "f04a04d6-18d3-4985-9fb9-517343f39e33"
@@ -752,7 +752,7 @@
       "typeVersion": 3.4,
       "position": [
         -576,
-        288
+        240
       ],
       "id": "13a6b9ed-f507-4917-8301-6ad5e0bbd0ca",
       "name": "Set sync new branch"
@@ -839,7 +839,7 @@
       "typeVersion": 1.2,
       "position": [
         1552,
-        768
+        816
       ],
       "name": "Merge sync diff branch",
       "id": "2612e692-d90a-43f7-8e77-8242e63b7f41",
@@ -1253,7 +1253,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "df26b18b-1e64-4fa6-83c3-c8edc5de43f7",
+  "versionId": "99e08c04-4c32-45d8-b066-9bdfde93a211",
   "activeVersionId": "f25615df-5ac3-411f-a41a-73559b70d822",
   "triggerCount": 1,
   "shared": [
