@@ -1,0 +1,379 @@
+{
+  "updatedAt": "2025-12-24T04:19:19.052Z",
+  "createdAt": "2025-12-24T04:15:27.203Z",
+  "id": "m56jDaVjH7yh8OvR",
+  "name": "Merge Sync Branch",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "method": "DELETE",
+        "url": "=https://api.github.com/repos/{{ $('Start').item.json.github_account_name }}/{{ $('Start').item.json.github_repo_name }}/git/refs/heads/{{ $('Start').item.json.sync_branch }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "githubApi",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        2160,
+        912
+      ],
+      "id": "e6d77e57-0826-40e6-b70b-66bbbcd33e2f",
+      "name": "GitHub Delete sync branch",
+      "executeOnce": true,
+      "credentials": {
+        "githubApi": {
+          "id": "Hl56b4iirORx4pMb",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.github.com/repos/{{ $json.github_account_name }}/{{ $json.github_repo_name }}/pulls ",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "githubApi",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "title",
+              "value": "=Automated sync {{ $now.setLocale('en-GB').toLocaleString().replaceAll('/', '') }}"
+            },
+            {
+              "name": "head",
+              "value": "={{ $json.sync_branch }}"
+            },
+            {
+              "name": "base",
+              "value": "main"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1712,
+        912
+      ],
+      "id": "2fffbebc-8463-4fcd-b7c9-95d132b1a33b",
+      "name": "GitHub Create PR",
+      "executeOnce": true,
+      "credentials": {
+        "githubApi": {
+          "id": "Hl56b4iirORx4pMb",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://api.github.com/repos/{{ $('Start').item.json.github_account_name }}/{{ $('Start').item.json.github_repo_name }}/pulls/{{ $json.number }}/merge",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "githubApi",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "commit_title",
+              "value": "=Sync workflows {{ $now.setLocale('en-GB').toLocaleString().replaceAll('/', '') }}"
+            },
+            {
+              "name": "merge_method",
+              "value": "squash"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1936,
+        912
+      ],
+      "id": "0a6669b9-6886-465b-93b3-e2fd9c2fffdb",
+      "name": "GitHub Merge PR",
+      "executeOnce": true,
+      "credentials": {
+        "githubApi": {
+          "id": "Hl56b4iirORx4pMb",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "github_account_name",
+              "type": "any"
+            },
+            {
+              "name": "github_repo_name",
+              "type": "any"
+            },
+            {
+              "name": "sync_branch"
+            }
+          ]
+        }
+      },
+      "id": "92e7c7c7-839a-476b-befb-7f32e248e6e1",
+      "typeVersion": 1.1,
+      "name": "Start",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        1488,
+        912
+      ]
+    }
+  ],
+  "connections": {
+    "GitHub Create PR": {
+      "main": [
+        [
+          {
+            "node": "GitHub Merge PR",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub Merge PR": {
+      "main": [
+        [
+          {
+            "node": "GitHub Delete sync branch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "GitHub Create PR",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {
+    "Start": [
+      {
+        "json": {
+          "github_account_name": "Vahsek123",
+          "github_repo_name": "n8n-workflows",
+          "sync_branch": "sync-new"
+        }
+      }
+    ]
+  },
+  "versionId": "4666f7c3-2dd2-4545-b265-7b2998792a0e",
+  "activeVersionId": "4666f7c3-2dd2-4545-b265-7b2998792a0e",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-12-24T04:15:27.215Z",
+      "createdAt": "2025-12-24T04:15:27.215Z",
+      "role": "workflow:owner",
+      "workflowId": "m56jDaVjH7yh8OvR",
+      "projectId": "Zegp8TetQgawftof"
+    }
+  ],
+  "activeVersion": {
+    "updatedAt": "2025-12-24T04:19:07.000Z",
+    "createdAt": "2025-12-24T04:19:00.888Z",
+    "versionId": "4666f7c3-2dd2-4545-b265-7b2998792a0e",
+    "workflowId": "m56jDaVjH7yh8OvR",
+    "nodes": [
+      {
+        "parameters": {
+          "method": "DELETE",
+          "url": "=https://api.github.com/repos/{{ $('Start').item.json.github_account_name }}/{{ $('Start').item.json.github_repo_name }}/git/refs/heads/{{ $('Start').item.json.sync_branch }}",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "githubApi",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.3,
+        "position": [
+          2160,
+          912
+        ],
+        "id": "e6d77e57-0826-40e6-b70b-66bbbcd33e2f",
+        "name": "GitHub Delete sync branch",
+        "executeOnce": true,
+        "credentials": {
+          "githubApi": {
+            "id": "Hl56b4iirORx4pMb",
+            "name": "GitHub account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "=https://api.github.com/repos/{{ $json.github_account_name }}/{{ $json.github_repo_name }}/pulls ",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "githubApi",
+          "sendBody": true,
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "title",
+                "value": "=Automated sync {{ $now.setLocale('en-GB').toLocaleString().replaceAll('/', '') }}"
+              },
+              {
+                "name": "head",
+                "value": "={{ $json.sync_branch }}"
+              },
+              {
+                "name": "base",
+                "value": "main"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.3,
+        "position": [
+          1712,
+          912
+        ],
+        "id": "2fffbebc-8463-4fcd-b7c9-95d132b1a33b",
+        "name": "GitHub Create PR",
+        "executeOnce": true,
+        "credentials": {
+          "githubApi": {
+            "id": "Hl56b4iirORx4pMb",
+            "name": "GitHub account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "method": "PUT",
+          "url": "=https://api.github.com/repos/{{ $('Start').item.json.github_account_name }}/{{ $('Start').item.json.github_repo_name }}/pulls/{{ $json.number }}/merge",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "githubApi",
+          "sendBody": true,
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "commit_title",
+                "value": "=Sync workflows {{ $now.setLocale('en-GB').toLocaleString().replaceAll('/', '') }}"
+              },
+              {
+                "name": "merge_method",
+                "value": "squash"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.3,
+        "position": [
+          1936,
+          912
+        ],
+        "id": "0a6669b9-6886-465b-93b3-e2fd9c2fffdb",
+        "name": "GitHub Merge PR",
+        "executeOnce": true,
+        "credentials": {
+          "githubApi": {
+            "id": "Hl56b4iirORx4pMb",
+            "name": "GitHub account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "workflowInputs": {
+            "values": [
+              {
+                "name": "github_account_name",
+                "type": "any"
+              },
+              {
+                "name": "github_repo_name",
+                "type": "any"
+              },
+              {
+                "name": "sync_branch"
+              }
+            ]
+          }
+        },
+        "id": "92e7c7c7-839a-476b-befb-7f32e248e6e1",
+        "typeVersion": 1.1,
+        "name": "Start",
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "position": [
+          1488,
+          912
+        ]
+      }
+    ],
+    "connections": {
+      "GitHub Create PR": {
+        "main": [
+          [
+            {
+              "node": "GitHub Merge PR",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GitHub Merge PR": {
+        "main": [
+          [
+            {
+              "node": "GitHub Delete sync branch",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Start": {
+        "main": [
+          [
+            {
+              "node": "GitHub Create PR",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Keshav Bharani",
+    "name": "v1.0.0",
+    "description": ""
+  },
+  "tags": [],
+  "sync_branch": "sync-new"
+}
