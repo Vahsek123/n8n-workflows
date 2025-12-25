@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-12-24T21:47:50.270Z",
+  "updatedAt": "2025-12-25T08:14:30.002Z",
   "createdAt": "2025-12-17T08:06:55.958Z",
   "id": "nSKe6NEctMGh41rT",
   "name": "EXchange Notification",
@@ -161,7 +161,7 @@
           "cachedResultName": "media-updates📺",
           "cachedResultUrl": "https://discord.com/channels/1448492576758956196/1448600243649249361"
         },
-        "content": "=**{{ $json.title }}** has been released with official subs!\nLink: {{ $json.url }}",
+        "content": "=**{{ $('Filter EXchange post').item.json.title }}** has been released with official subs!\nLink: {{ $('Filter EXchange post').item.json.url }}",
         "options": {}
       },
       "type": "n8n-nodes-base.discord",
@@ -197,7 +197,7 @@
           "cachedResultName": "media-updates📺",
           "cachedResultUrl": "https://discord.com/channels/1448492576758956196/1448600243649249361"
         },
-        "content": "=**{{ $json.title }}** has been released with AI subs!\nLink: {{ $json.url }}",
+        "content": "=**{{ $('Filter EXchange post').item.json.title }}** has been released with AI subs!\nLink: {{ $('Filter EXchange post').item.json.url }}",
         "options": {}
       },
       "type": "n8n-nodes-base.discord",
@@ -547,8 +547,8 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "7064dcb7-d268-4d9b-8378-fa3847046e5a",
-  "activeVersionId": "7064dcb7-d268-4d9b-8378-fa3847046e5a",
+  "versionId": "99cc7ae2-ecb5-4e7f-a200-8bb466a625c0",
+  "activeVersionId": "99cc7ae2-ecb5-4e7f-a200-8bb466a625c0",
   "triggerCount": 1,
   "shared": [
     {
@@ -560,9 +560,9 @@
     }
   ],
   "activeVersion": {
-    "updatedAt": "2025-12-24T21:47:59.000Z",
-    "createdAt": "2025-12-19T11:35:52.899Z",
-    "versionId": "7064dcb7-d268-4d9b-8378-fa3847046e5a",
+    "updatedAt": "2025-12-25T08:14:34.000Z",
+    "createdAt": "2025-12-25T08:14:03.113Z",
+    "versionId": "99cc7ae2-ecb5-4e7f-a200-8bb466a625c0",
     "workflowId": "nSKe6NEctMGh41rT",
     "nodes": [
       {
@@ -720,7 +720,7 @@
             "cachedResultName": "media-updates📺",
             "cachedResultUrl": "https://discord.com/channels/1448492576758956196/1448600243649249361"
           },
-          "content": "=**{{ $json.title }}** has been released with official subs!\nLink: {{ $json.url }}",
+          "content": "=**{{ $('Filter EXchange post').item.json.title }}** has been released with official subs!\nLink: {{ $('Filter EXchange post').item.json.url }}",
           "options": {}
         },
         "type": "n8n-nodes-base.discord",
@@ -756,7 +756,7 @@
             "cachedResultName": "media-updates📺",
             "cachedResultUrl": "https://discord.com/channels/1448492576758956196/1448600243649249361"
           },
-          "content": "=**{{ $json.title }}** has been released with AI subs!\nLink: {{ $json.url }}",
+          "content": "=**{{ $('Filter EXchange post').item.json.title }}** has been released with AI subs!\nLink: {{ $('Filter EXchange post').item.json.url }}",
           "options": {}
         },
         "type": "n8n-nodes-base.discord",
@@ -1095,8 +1095,15 @@
       }
     },
     "authors": "Keshav Bharani",
-    "name": "v1.1.0",
+    "name": "v1.1.1",
     "description": ""
   },
-  "tags": []
+  "tags": [
+    {
+      "updatedAt": "2025-12-25T08:14:28.793Z",
+      "createdAt": "2025-12-25T08:14:28.793Z",
+      "id": "DHOoMoh4pkNEW6zf",
+      "name": "v1.1.1"
+    }
+  ]
 }
