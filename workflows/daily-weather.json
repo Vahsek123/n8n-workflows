@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-12-24T00:36:55.799Z",
+  "updatedAt": "2025-12-24T23:41:28.623Z",
   "createdAt": "2025-12-13T04:57:38.978Z",
   "id": "vZCByZUyKXAkIuG8",
   "name": "Daily weather",
@@ -12,7 +12,7 @@
       "typeVersion": 1,
       "position": [
         -80,
-        168
+        176
       ],
       "id": "1c1673d7-df3a-4af8-a006-172c8833defe",
       "name": "When clicking ‘Execute workflow’"
@@ -20,6 +20,8 @@
     {
       "parameters": {
         "url": "https://maps.googleapis.com/maps/api/geocode/json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
         "sendQuery": true,
         "queryParameters": {
           "parameters": [
@@ -35,11 +37,17 @@
       "typeVersion": 4.3,
       "position": [
         144,
-        168
+        176
       ],
       "id": "04d3971e-4b3e-4e64-b633-65a752a66c0e",
       "name": "Get Longitude/Latitude",
       "retryOnFail": true,
+      "credentials": {
+        "httpQueryAuth": {
+          "id": "MvjUsPe2F2yAjkJ3",
+          "name": "Google API"
+        }
+      },
       "onError": "continueErrorOutput"
     },
     {
@@ -70,7 +78,7 @@
       "typeVersion": 4.3,
       "position": [
         592,
-        24
+        32
       ],
       "id": "404ce7d6-03ba-44c3-af08-de31e9da1d7e",
       "name": "Get Hourly Forecast",
@@ -183,7 +191,7 @@
       "typeVersion": 1.3,
       "position": [
         -80,
-        360
+        368
       ],
       "id": "ac73d234-449a-40d5-90c7-42793981b2f5",
       "name": "Schedule Trigger"
@@ -198,7 +206,7 @@
       "typeVersion": 2.1,
       "position": [
         -80,
-        -24
+        -32
       ],
       "id": "c13fefca-f3f4-42cb-8350-3e51b79b3299",
       "name": "Webhook",
@@ -301,7 +309,7 @@
           "conditions": [
             {
               "id": "63a03aa6-c10f-4582-953a-b91e7000ff01",
-              "leftValue": "={{ $json.body.status }}",
+              "leftValue": "={{ $json.status }}",
               "rightValue": "OK",
               "operator": {
                 "type": "string",
@@ -321,6 +329,19 @@
       ],
       "id": "4d60e7b0-e670-4bec-a1fd-5ceb065efdaf",
       "name": "If valid response"
+    },
+    {
+      "parameters": {
+        "errorMessage": "Workflow failed"
+      },
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        1824,
+        208
+      ],
+      "id": "82ecad16-ea39-410f-9cfb-55b694a361aa",
+      "name": "Stop and Error"
     }
   ],
   "connections": {
@@ -457,6 +478,17 @@
           }
         ]
       ]
+    },
+    "Send error": {
+      "main": [
+        [
+          {
+            "node": "Stop and Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -471,8 +503,8 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "64d72103-06ef-4fcf-9849-b9c561e2d1b0",
-  "activeVersionId": "64d72103-06ef-4fcf-9849-b9c561e2d1b0",
+  "versionId": "e7c0ac81-d6a0-41da-89dc-e4b3b81207d3",
+  "activeVersionId": "e7c0ac81-d6a0-41da-89dc-e4b3b81207d3",
   "triggerCount": 2,
   "shared": [
     {
@@ -484,9 +516,9 @@
     }
   ],
   "activeVersion": {
-    "updatedAt": "2025-12-24T00:37:08.000Z",
-    "createdAt": "2025-12-24T00:36:55.803Z",
-    "versionId": "64d72103-06ef-4fcf-9849-b9c561e2d1b0",
+    "updatedAt": "2025-12-24T23:41:34.000Z",
+    "createdAt": "2025-12-24T23:40:04.065Z",
+    "versionId": "e7c0ac81-d6a0-41da-89dc-e4b3b81207d3",
     "workflowId": "vZCByZUyKXAkIuG8",
     "nodes": [
       {
@@ -495,7 +527,7 @@
         "typeVersion": 1,
         "position": [
           -80,
-          168
+          176
         ],
         "id": "1c1673d7-df3a-4af8-a006-172c8833defe",
         "name": "When clicking ‘Execute workflow’"
@@ -503,6 +535,8 @@
       {
         "parameters": {
           "url": "https://maps.googleapis.com/maps/api/geocode/json",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpQueryAuth",
           "sendQuery": true,
           "queryParameters": {
             "parameters": [
@@ -518,11 +552,17 @@
         "typeVersion": 4.3,
         "position": [
           144,
-          168
+          176
         ],
         "id": "04d3971e-4b3e-4e64-b633-65a752a66c0e",
         "name": "Get Longitude/Latitude",
         "retryOnFail": true,
+        "credentials": {
+          "httpQueryAuth": {
+            "id": "MvjUsPe2F2yAjkJ3",
+            "name": "Google API"
+          }
+        },
         "onError": "continueErrorOutput"
       },
       {
@@ -553,7 +593,7 @@
         "typeVersion": 4.3,
         "position": [
           592,
-          24
+          32
         ],
         "id": "404ce7d6-03ba-44c3-af08-de31e9da1d7e",
         "name": "Get Hourly Forecast",
@@ -666,7 +706,7 @@
         "typeVersion": 1.3,
         "position": [
           -80,
-          360
+          368
         ],
         "id": "ac73d234-449a-40d5-90c7-42793981b2f5",
         "name": "Schedule Trigger"
@@ -681,7 +721,7 @@
         "typeVersion": 2.1,
         "position": [
           -80,
-          -24
+          -32
         ],
         "id": "c13fefca-f3f4-42cb-8350-3e51b79b3299",
         "name": "Webhook",
@@ -784,7 +824,7 @@
             "conditions": [
               {
                 "id": "63a03aa6-c10f-4582-953a-b91e7000ff01",
-                "leftValue": "={{ $json.body.status }}",
+                "leftValue": "={{ $json.status }}",
                 "rightValue": "OK",
                 "operator": {
                   "type": "string",
@@ -804,6 +844,19 @@
         ],
         "id": "4d60e7b0-e670-4bec-a1fd-5ceb065efdaf",
         "name": "If valid response"
+      },
+      {
+        "parameters": {
+          "errorMessage": "Workflow failed"
+        },
+        "type": "n8n-nodes-base.stopAndError",
+        "typeVersion": 1,
+        "position": [
+          1824,
+          208
+        ],
+        "id": "82ecad16-ea39-410f-9cfb-55b694a361aa",
+        "name": "Stop and Error"
       }
     ],
     "connections": {
@@ -940,11 +993,29 @@
             }
           ]
         ]
+      },
+      "Send error": {
+        "main": [
+          [
+            {
+              "node": "Stop and Error",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
       }
     },
     "authors": "Keshav Bharani",
-    "name": "v2.1.0",
-    "description": "Add error handling"
+    "name": "v2.1.1",
+    "description": ""
   },
-  "tags": []
+  "tags": [
+    {
+      "updatedAt": "2025-12-24T23:41:27.315Z",
+      "createdAt": "2025-12-24T23:41:27.315Z",
+      "id": "ldUWc6YMYumrnoEA",
+      "name": "v2.1.1"
+    }
+  ]
 }
