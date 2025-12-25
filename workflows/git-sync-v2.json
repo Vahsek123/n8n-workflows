@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-12-24T23:46:39.535Z",
+  "updatedAt": "2025-12-25T02:33:00.632Z",
   "createdAt": "2025-12-15T09:03:11.618Z",
   "id": "70Pr9e2vnC0YTVPT",
   "name": "Git Sync v2",
@@ -112,12 +112,12 @@
           "mode": "name",
           "value": "={{ $('Set GitHub Details').item.json.github_repo_name }}"
         },
-        "filePath": "={{ $('Set GitHub Details').item.json.repo_workflows_path }}{{ $node['Edit for Upload'].json.fileName }}",
+        "filePath": "={{ $('Set GitHub Details').item.json.repo_workflows_path }}{{ $('Edit for Upload').json.fileName }}",
         "fileContent": "={{ $('To base64').item.json.data }}",
-        "commitMessage": "=n8n_backup_sync-{{ $node['Edit for Upload'].json.commitDate }}",
+        "commitMessage": "=n8n_backup_sync-{{ $('Edit for Upload').json.commitDate }}",
         "additionalParameters": {
           "branch": {
-            "branch": "sync-new"
+            "branch": "={{ $json.sync_branch }}"
           }
         }
       },
@@ -149,7 +149,7 @@
       "name": "Json file",
       "type": "n8n-nodes-base.convertToFile",
       "position": [
-        16,
+        -560,
         240
       ],
       "typeVersion": 1.1
@@ -163,7 +163,7 @@
       "name": "To base64",
       "type": "n8n-nodes-base.extractFromFile",
       "position": [
-        192,
+        -384,
         240
       ],
       "typeVersion": 1
@@ -352,7 +352,7 @@
       "name": "Edit for Upload",
       "type": "n8n-nodes-base.set",
       "position": [
-        368,
+        -208,
         240
       ],
       "typeVersion": 3.4
@@ -728,35 +728,11 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        -352,
+        208,
         304
       ],
       "name": "Create Sync New Branch",
       "id": "f04a04d6-18d3-4985-9fb9-517343f39e33"
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "3c49f87e-3b8b-4f63-af89-f0693755634e",
-              "name": "sync_branch",
-              "value": "sync-new",
-              "type": "string"
-            }
-          ]
-        },
-        "includeOtherFields": true,
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        -576,
-        240
-      ],
-      "id": "13a6b9ed-f507-4917-8301-6ad5e0bbd0ca",
-      "name": "Set sync new branch"
     },
     {
       "parameters": {
@@ -918,8 +894,8 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        -160,
-        192
+        368,
+        176
       ],
       "id": "79592a88-f60a-474f-aafc-d7dbb3c900c3",
       "name": "Merge"
@@ -936,6 +912,30 @@
       ],
       "id": "14c5d9b5-b5e5-47f6-83b0-979e65f8b53e",
       "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3c49f87e-3b8b-4f63-af89-f0693755634e",
+              "name": "sync_branch",
+              "value": "sync-new",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        0,
+        240
+      ],
+      "id": "13a6b9ed-f507-4917-8301-6ad5e0bbd0ca",
+      "name": "Set sync new branch"
     }
   ],
   "connections": {
@@ -1042,7 +1042,7 @@
       "main": [
         [
           {
-            "node": "Set sync new branch",
+            "node": "Json file",
             "type": "main",
             "index": 0
           }
@@ -1090,7 +1090,7 @@
       "main": [
         [
           {
-            "node": "Upload file",
+            "node": "Set sync new branch",
             "type": "main",
             "index": 0
           }
@@ -1224,22 +1224,6 @@
         ]
       ]
     },
-    "Set sync new branch": {
-      "main": [
-        [
-          {
-            "node": "Merge",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Create Sync New Branch",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Set sync diff branch": {
       "main": [
         [
@@ -1282,7 +1266,7 @@
       "main": [
         [
           {
-            "node": "Json file",
+            "node": "Upload file",
             "type": "main",
             "index": 0
           }
@@ -1294,6 +1278,22 @@
         [
           {
             "node": "Code - InputA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set sync new branch": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create Sync New Branch",
             "type": "main",
             "index": 0
           }
@@ -1313,8 +1313,8 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "853e07ac-c864-40dc-a80a-729d3d7f4c82",
-  "activeVersionId": "95c95bca-37d1-4ed7-b18e-b215b208a045",
+  "versionId": "77484e86-7dca-479c-8b3c-4ad9ac8f6a8d",
+  "activeVersionId": "77484e86-7dca-479c-8b3c-4ad9ac8f6a8d",
   "triggerCount": 1,
   "shared": [
     {
@@ -1326,9 +1326,9 @@
     }
   ],
   "activeVersion": {
-    "updatedAt": "2025-12-24T05:50:22.000Z",
-    "createdAt": "2025-12-24T05:50:16.426Z",
-    "versionId": "95c95bca-37d1-4ed7-b18e-b215b208a045",
+    "updatedAt": "2025-12-25T02:33:07.000Z",
+    "createdAt": "2025-12-25T02:20:41.442Z",
+    "versionId": "77484e86-7dca-479c-8b3c-4ad9ac8f6a8d",
     "workflowId": "70Pr9e2vnC0YTVPT",
     "nodes": [
       {
@@ -1437,12 +1437,12 @@
             "mode": "name",
             "value": "={{ $('Set GitHub Details').item.json.github_repo_name }}"
           },
-          "filePath": "={{ $('Set GitHub Details').item.json.repo_workflows_path }}{{ $node['Edit for Upload'].json.fileName }}",
+          "filePath": "={{ $('Set GitHub Details').item.json.repo_workflows_path }}{{ $('Edit for Upload').json.fileName }}",
           "fileContent": "={{ $('To base64').item.json.data }}",
-          "commitMessage": "=n8n_backup_sync-{{ $node['Edit for Upload'].json.commitDate }}",
+          "commitMessage": "=n8n_backup_sync-{{ $('Edit for Upload').json.commitDate }}",
           "additionalParameters": {
             "branch": {
-              "branch": "sync-new"
+              "branch": "={{ $json.sync_branch }}"
             }
           }
         },
@@ -1474,7 +1474,7 @@
         "name": "Json file",
         "type": "n8n-nodes-base.convertToFile",
         "position": [
-          16,
+          -560,
           240
         ],
         "typeVersion": 1.1
@@ -1488,7 +1488,7 @@
         "name": "To base64",
         "type": "n8n-nodes-base.extractFromFile",
         "position": [
-          192,
+          -384,
           240
         ],
         "typeVersion": 1
@@ -1677,7 +1677,7 @@
         "name": "Edit for Upload",
         "type": "n8n-nodes-base.set",
         "position": [
-          368,
+          -208,
           240
         ],
         "typeVersion": 3.4
@@ -2053,34 +2053,11 @@
         "type": "n8n-nodes-base.executeWorkflow",
         "typeVersion": 1.2,
         "position": [
-          -352,
+          208,
           304
         ],
         "name": "Create Sync New Branch",
         "id": "f04a04d6-18d3-4985-9fb9-517343f39e33"
-      },
-      {
-        "parameters": {
-          "assignments": {
-            "assignments": [
-              {
-                "id": "3c49f87e-3b8b-4f63-af89-f0693755634e",
-                "name": "sync_branch",
-                "value": "sync-new",
-                "type": "string"
-              }
-            ]
-          },
-          "options": {}
-        },
-        "type": "n8n-nodes-base.set",
-        "typeVersion": 3.4,
-        "position": [
-          -576,
-          240
-        ],
-        "id": "13a6b9ed-f507-4917-8301-6ad5e0bbd0ca",
-        "name": "Set sync new branch"
       },
       {
         "parameters": {
@@ -2094,6 +2071,7 @@
               }
             ]
           },
+          "includeOtherFields": true,
           "options": {}
         },
         "type": "n8n-nodes-base.set",
@@ -2241,8 +2219,8 @@
         "type": "n8n-nodes-base.merge",
         "typeVersion": 3.2,
         "position": [
-          -160,
-          192
+          368,
+          176
         ],
         "id": "79592a88-f60a-474f-aafc-d7dbb3c900c3",
         "name": "Merge"
@@ -2259,6 +2237,30 @@
         ],
         "id": "14c5d9b5-b5e5-47f6-83b0-979e65f8b53e",
         "name": "Merge1"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "3c49f87e-3b8b-4f63-af89-f0693755634e",
+                "name": "sync_branch",
+                "value": "sync-new",
+                "type": "string"
+              }
+            ]
+          },
+          "includeOtherFields": true,
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          0,
+          240
+        ],
+        "id": "13a6b9ed-f507-4917-8301-6ad5e0bbd0ca",
+        "name": "Set sync new branch"
       }
     ],
     "connections": {
@@ -2365,7 +2367,7 @@
         "main": [
           [
             {
-              "node": "Set sync new branch",
+              "node": "Json file",
               "type": "main",
               "index": 0
             }
@@ -2413,7 +2415,7 @@
         "main": [
           [
             {
-              "node": "Upload file",
+              "node": "Set sync new branch",
               "type": "main",
               "index": 0
             }
@@ -2547,22 +2549,6 @@
           ]
         ]
       },
-      "Set sync new branch": {
-        "main": [
-          [
-            {
-              "node": "Merge",
-              "type": "main",
-              "index": 0
-            },
-            {
-              "node": "Create Sync New Branch",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
       "Set sync diff branch": {
         "main": [
           [
@@ -2605,7 +2591,7 @@
         "main": [
           [
             {
-              "node": "Json file",
+              "node": "Upload file",
               "type": "main",
               "index": 0
             }
@@ -2622,11 +2608,34 @@
             }
           ]
         ]
+      },
+      "Set sync new branch": {
+        "main": [
+          [
+            {
+              "node": "Merge",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Create Sync New Branch",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
       }
     },
     "authors": "Keshav Bharani",
-    "name": "v2.0.0",
+    "name": "v2.0.1",
     "description": ""
   },
-  "tags": []
+  "tags": [
+    {
+      "updatedAt": "2025-12-25T02:32:57.341Z",
+      "createdAt": "2025-12-25T02:32:57.341Z",
+      "id": "CpRKa43tkcGobuJW",
+      "name": "v2.0.1"
+    }
+  ]
 }
