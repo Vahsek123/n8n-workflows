@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-12-19T11:35:52.892Z",
+  "updatedAt": "2025-12-24T21:47:50.270Z",
   "createdAt": "2025-12-17T08:06:55.958Z",
   "id": "nSKe6NEctMGh41rT",
   "name": "EXchange Notification",
@@ -548,7 +548,7 @@
   },
   "pinData": {},
   "versionId": "7064dcb7-d268-4d9b-8378-fa3847046e5a",
-  "activeVersionId": "6e86b819-8cf7-4b0b-9c87-8e9f1e0c2c58",
+  "activeVersionId": "7064dcb7-d268-4d9b-8378-fa3847046e5a",
   "triggerCount": 1,
   "shared": [
     {
@@ -560,9 +560,9 @@
     }
   ],
   "activeVersion": {
-    "updatedAt": "2025-12-19T11:32:03.000Z",
-    "createdAt": "2025-12-19T11:31:41.718Z",
-    "versionId": "6e86b819-8cf7-4b0b-9c87-8e9f1e0c2c58",
+    "updatedAt": "2025-12-24T21:47:59.000Z",
+    "createdAt": "2025-12-19T11:35:52.899Z",
+    "versionId": "7064dcb7-d268-4d9b-8378-fa3847046e5a",
     "workflowId": "nSKe6NEctMGh41rT",
     "nodes": [
       {
@@ -646,6 +646,15 @@
                   "operation": "equals",
                   "name": "filter.operator.equals"
                 }
+              },
+              {
+                "id": "fb4735aa-e729-4c05-858b-a34aeed96d78",
+                "leftValue": "={{ $('Get row(s)').item.json.state }}",
+                "rightValue": "ai",
+                "operator": {
+                  "type": "string",
+                  "operation": "notEquals"
+                }
               }
             ],
             "combinator": "and"
@@ -655,7 +664,7 @@
         "type": "n8n-nodes-base.if",
         "typeVersion": 2.3,
         "position": [
-          1552,
+          1344,
           96
         ],
         "id": "e50d6693-e1ea-459b-b514-9fd9ef7e3787",
@@ -717,7 +726,7 @@
         "type": "n8n-nodes-base.discord",
         "typeVersion": 2,
         "position": [
-          1552,
+          1568,
           -96
         ],
         "id": "08eafcdb-08b2-42eb-a818-19478a2f0a26",
@@ -753,7 +762,7 @@
         "type": "n8n-nodes-base.discord",
         "typeVersion": 2,
         "position": [
-          1984,
+          1792,
           96
         ],
         "id": "ea613bcd-a5ad-4b7f-9f0d-04803418df76",
@@ -907,7 +916,7 @@
         "type": "n8n-nodes-base.dataTable",
         "typeVersion": 1,
         "position": [
-          1328,
+          1344,
           -96
         ],
         "id": "695f46b6-e52f-4365-9ff0-23988527384b",
@@ -958,8 +967,8 @@
         "type": "n8n-nodes-base.dataTable",
         "typeVersion": 1,
         "position": [
-          1760,
-          0
+          1568,
+          96
         ],
         "id": "1cac99c3-ee68-4c66-ab15-32526988d7c7",
         "name": "Update row(s)1"
@@ -1086,8 +1095,8 @@
       }
     },
     "authors": "Keshav Bharani",
-    "name": "v1.0.1",
-    "description": "Fix repeated executions"
+    "name": "v1.1.0",
+    "description": ""
   },
   "tags": []
 }
