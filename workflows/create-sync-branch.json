@@ -1,0 +1,287 @@
+{
+  "updatedAt": "2025-12-24T05:39:08.672Z",
+  "createdAt": "2025-12-24T03:56:47.680Z",
+  "id": "emZlmWCsBd6Xwzr4",
+  "name": "Create Sync Branch",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "url": "=https://api.github.com/repos/{{ $json.github_account_name }}/{{ $json.github_repo_name }}/git/ref/heads/main",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "githubApi",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -96,
+        1312
+      ],
+      "id": "8ce42705-8fae-4d40-8e53-c4ee13c1a281",
+      "name": "GitHub Get SHA1",
+      "executeOnce": true,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "lCX5Yosq6qksdgtn",
+          "name": "n8n API"
+        },
+        "githubApi": {
+          "id": "Hl56b4iirORx4pMb",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.github.com/repos/{{ $('Start').item.json.github_account_name }}/{{ $('Start').item.json.github_repo_name }}/git/refs",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "githubApi",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "ref",
+              "value": "=refs/heads/{{ $('Start').item.json.new_branch_name }}"
+            },
+            {
+              "name": "sha",
+              "value": "={{ $json.object.sha }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        128,
+        1312
+      ],
+      "id": "f62e99ce-ae14-48f1-9fe7-2ab1b397b94c",
+      "name": "GitHub Create branch",
+      "executeOnce": true,
+      "credentials": {
+        "githubApi": {
+          "id": "Hl56b4iirORx4pMb",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "github_account_name"
+            },
+            {
+              "name": "github_repo_name"
+            },
+            {
+              "name": "new_branch_name"
+            }
+          ]
+        }
+      },
+      "id": "e18df9f0-6acd-429e-944b-1d148fcc5ca5",
+      "typeVersion": 1.1,
+      "name": "Start",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        -320,
+        1312
+      ]
+    }
+  ],
+  "connections": {
+    "GitHub Get SHA1": {
+      "main": [
+        [
+          {
+            "node": "GitHub Create branch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "GitHub Get SHA1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub Create branch": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {
+    "Start": [
+      {
+        "json": {
+          "github_account_name": "Vahsek123",
+          "github_repo_name": "n8n-workflows",
+          "new_branch_name": "sync-new"
+        }
+      }
+    ]
+  },
+  "versionId": "e28472c1-094b-4a3c-9caf-0c946899f523",
+  "activeVersionId": "e28472c1-094b-4a3c-9caf-0c946899f523",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-12-24T03:56:47.690Z",
+      "createdAt": "2025-12-24T03:56:47.690Z",
+      "role": "workflow:owner",
+      "workflowId": "emZlmWCsBd6Xwzr4",
+      "projectId": "Zegp8TetQgawftof"
+    }
+  ],
+  "activeVersion": {
+    "updatedAt": "2025-12-24T05:39:14.000Z",
+    "createdAt": "2025-12-24T05:39:08.674Z",
+    "versionId": "e28472c1-094b-4a3c-9caf-0c946899f523",
+    "workflowId": "emZlmWCsBd6Xwzr4",
+    "nodes": [
+      {
+        "parameters": {
+          "url": "=https://api.github.com/repos/{{ $json.github_account_name }}/{{ $json.github_repo_name }}/git/ref/heads/main",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "githubApi",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.3,
+        "position": [
+          -96,
+          1312
+        ],
+        "id": "8ce42705-8fae-4d40-8e53-c4ee13c1a281",
+        "name": "GitHub Get SHA1",
+        "executeOnce": true,
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "lCX5Yosq6qksdgtn",
+            "name": "n8n API"
+          },
+          "githubApi": {
+            "id": "Hl56b4iirORx4pMb",
+            "name": "GitHub account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "=https://api.github.com/repos/{{ $('Start').item.json.github_account_name }}/{{ $('Start').item.json.github_repo_name }}/git/refs",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "githubApi",
+          "sendBody": true,
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "ref",
+                "value": "=refs/heads/{{ $('Start').item.json.new_branch_name }}"
+              },
+              {
+                "name": "sha",
+                "value": "={{ $json.object.sha }}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.3,
+        "position": [
+          128,
+          1312
+        ],
+        "id": "f62e99ce-ae14-48f1-9fe7-2ab1b397b94c",
+        "name": "GitHub Create branch",
+        "executeOnce": true,
+        "credentials": {
+          "githubApi": {
+            "id": "Hl56b4iirORx4pMb",
+            "name": "GitHub account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "workflowInputs": {
+            "values": [
+              {
+                "name": "github_account_name"
+              },
+              {
+                "name": "github_repo_name"
+              },
+              {
+                "name": "new_branch_name"
+              }
+            ]
+          }
+        },
+        "id": "e18df9f0-6acd-429e-944b-1d148fcc5ca5",
+        "typeVersion": 1.1,
+        "name": "Start",
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "position": [
+          -320,
+          1312
+        ]
+      }
+    ],
+    "connections": {
+      "GitHub Get SHA1": {
+        "main": [
+          [
+            {
+              "node": "GitHub Create branch",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Start": {
+        "main": [
+          [
+            {
+              "node": "GitHub Get SHA1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GitHub Create branch": {
+        "main": [
+          []
+        ]
+      }
+    },
+    "authors": "Keshav Bharani",
+    "name": "v1.0.0",
+    "description": ""
+  },
+  "tags": [],
+  "sync_branch": "sync-new"
+}
